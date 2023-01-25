@@ -1,6 +1,0 @@
-#This is a configuration file
-
-SCREEN_HEIGHT = 800
-SCREEN_WIDTH = 960
-TILE_HEIGHT = 16
-TILE_WIDTH = 16
