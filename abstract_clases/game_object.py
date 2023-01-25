@@ -11,7 +11,8 @@ class GameObject(Surface):
         ) -> None:
 
         self.rect=Rect(x,y,width,height)
-        self.image=image    
+        self.image=image
 
- 
+    def update(self)->None:    
+        """update"""
 

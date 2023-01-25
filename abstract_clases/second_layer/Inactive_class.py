@@ -6,3 +6,6 @@ class InactiveObjects(GameObject):
 
     def __init__(self, x: int, y: int,  width:int, height:int, image: Sprite) -> None:
         super().__init__(x, y, width, height, image) 
+    
+    def update(self)->None:
+        """update"""

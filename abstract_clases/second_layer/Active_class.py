@@ -1,7 +1,7 @@
 from game_object import GameObject
 from pygame.sprite import Sprite
 
-class ActiveObjects(GameObject):
+class ActiveObject(GameObject):
     """ Class for objects that do something on their own """
 
     def __init__(
@@ -12,11 +12,16 @@ class ActiveObjects(GameObject):
         self.animation=animation
         self.animation_index=animation_index
     
+    def update(self)->None:
+        """update"""
+        self.continue_animation()
+
     def continue_animation(self):
         """ Moves the animation one frame ahead """
 
         self.animation_index+=1
         self.animation_index=self.animation%len(self.animation)
-        #draw the sprite
+        self.image=self.animation[self.animation_index]
+
  
           
