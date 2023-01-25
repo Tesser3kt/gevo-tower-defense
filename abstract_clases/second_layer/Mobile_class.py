@@ -13,6 +13,6 @@ class ActiveObjects(GameObject):
     
     def move(self):
         """ Moves the object by its speed in its direction """
+        self.rect=self.rect.move(self.direction[0]*self.speed, self.direction[1]*self.speed)
         
-        self.x+=self.direction[0]*self.speed
-        self.y+=self.direction[1]*self.speed
+
