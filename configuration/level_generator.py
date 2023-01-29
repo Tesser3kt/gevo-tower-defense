@@ -68,14 +68,14 @@ def move_to(rnd_direction:Direction, x:int, y:int) -> tuple:
     y += rnd_direction.value[1]
     return x, y
 
-def go_geradeaus(probability, direction)->None:
+def go_geradeaus(probability:dict, direction:Direction)->None:
     """Change the probability to max in the direction you want"""
     for direction in Direction:
         probability[direction.value] = 0
     probability[direction.value] = Config_lvl_gen.MAX_PROB
 
 def randomize_probs(probability:dict)->None:
-    """Randomize the probability"""
+    """Set the probability to the config values"""
     i = 0
     for direction in Direction:
         probability[direction.value] = list(Config_lvl_gen.RANDOM_PROBS.values())[i]
@@ -118,9 +118,9 @@ x, y = chosen_start
 draw_point(*chosen_start, img)
 
 #Posunese o pixel dál
-for i in range(5):
-    x, y = x+first_direction.value[0], y+first_direction.value[1]
-    draw_point(x, y, img)
+
+x, y = x+first_direction.value[0], y+first_direction.value[1]
+draw_point(x, y, img)
 
 last_direction = first_direction
 
@@ -131,7 +131,7 @@ while (x, y) not in border_pixels:
         x, y = move_to(direction, x, y)
         draw_point(x, y, img)
         counter += 1
-    if counter >= 5:
+    if counter >= Config_lvl_gen.MIN_STRAIGHT_LINE:
         randomize_probs(probability)
         direction = my_random_direction(probability)
         x, y = move_to(direction, x, y)
