@@ -118,19 +118,19 @@ x, y = chosen_start
 draw_point(*chosen_start, img)
 
 #Posunese o pixel dál
-
 x, y = x+first_direction.value[0], y+first_direction.value[1]
 draw_point(x, y, img)
-
 last_direction = first_direction
 
-counter = 0
+counter = 0 #Počet kroků rovně
 while (x, y) not in border_pixels:
     direction = my_random_direction(probability)
+    #Pokud je v obraze a kroků je méně, než chci, tak jdi rovně
     while last_direction == direction and counter < Config_lvl_gen.MIN_STRAIGHT_LINE and ((x, y) not in border_pixels):
         x, y = move_to(direction, x, y)
         draw_point(x, y, img)
         counter += 1
+    #Else půjde podle probability
     if counter >= Config_lvl_gen.MIN_STRAIGHT_LINE:
         randomize_probs(probability)
         direction = my_random_direction(probability)
@@ -140,6 +140,6 @@ while (x, y) not in border_pixels:
         counter = 0
 
     last_direction = direction
-    #break
+
 # Save the image
 img.save("level_generator.png")
