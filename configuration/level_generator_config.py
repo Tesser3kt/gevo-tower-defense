@@ -9,7 +9,7 @@ class Config_lvl_gen:
     PROB_DECREASE = 400
     MIN_STRAIGHT_LINE = 5
 
-    PATH_COLOR = (255, 255, 0)
+    PATH_COLOR = (255, 255, 0) # Yellow
 
     RANDOM_PROBS = {
         "UP": 350,
