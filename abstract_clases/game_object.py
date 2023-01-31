@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-from pygame.sprite import RenderUpdates, spritecollideany, groupcollide, Sprite
 from pygame import Surface, SCALED, Rect
 
 
