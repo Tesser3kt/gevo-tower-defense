@@ -1,11 +1,11 @@
 from game_object import GameObject
-from pygame.sprite import Sprite
+from pygame.surface import Surface
 
 class ActiveObject(GameObject):
     """ Class for objects that do something on their own """
 
     def __init__(
-        self, x:int, y:int, width:int, height:int, image:Sprite, animation:list[Sprite], animation_index:int = 0
+        self, x:int, y:int, width:int, height:int, image:Surface, animation:list[Surface], animation_index:int = 0
         ) -> None:
 
         super().__init__(x,y,width,height,image)
@@ -14,6 +14,7 @@ class ActiveObject(GameObject):
     
     def update(self)->None:
         """update"""
+        GameObject.update(self)
         self.continue_animation()
 
     def continue_animation(self):

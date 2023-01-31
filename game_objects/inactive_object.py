@@ -1,7 +1,7 @@
 from game_object import GameObject
 from pygame.sprite import Sprite
 
-class InactiveObjects(GameObject):
+class InactiveObject(GameObject):
     """ Class for objects that dont move """
 
     def __init__(self, x: int, y: int,  width:int, height:int, image: Sprite) -> None:
@@ -9,3 +9,4 @@ class InactiveObjects(GameObject):
     
     def update(self)->None:
         """update"""
+        GameObject.update(self)

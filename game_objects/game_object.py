@@ -1,4 +1,4 @@
-from pygame import Surface, SCALED, Rect
+from pygame import Surface, Rect
 
 
 class GameObject(Surface):
