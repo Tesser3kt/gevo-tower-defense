@@ -20,7 +20,7 @@ class ActiveObject(GameObject):
         """ Moves the animation one frame ahead """
 
         self.animation_index+=1
-        self.animation_index=self.animation%len(self.animation)
+        self.animation_index %= len(self.animation)
         self.image=self.animation[self.animation_index]
 
  
