@@ -9,3 +9,4 @@ class ImmobileObject(GameObject):
 
     def update(self)->None:
         """update"""
+        GameObject.update(self)
