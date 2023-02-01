@@ -1,5 +1,5 @@
 """Configuration file"""
-class Tile:  
+class Window:  
     HEIGHT = 800
     WIDTH = 960
 
