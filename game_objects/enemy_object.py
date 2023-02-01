@@ -6,16 +6,18 @@ from pygame.surface import Surface
 
 
 class Enemy_obejct(ActiveObject,MobileObject):
-    def __init__(self,x: int, y: int, width:int, height:int, image: Sprite, 
+    def __init__(self, hp:int,
+    x: int, y: int, width:int, height:int, image: Sprite, 
     speed:int, direction:tuple[int],
-    animation:list[Surface], animation_index:int = 0
+    animation:list[Surface], animation_index:int = 0,
     ) -> None:
         ActiveObject.__init__(x,y,width,height,image,animation,animation_index)
         MobileObject.__init__(x,y,width,height,image,speed,direction)
-    
+
+        self.hp=hp
     def update(self)->None:
-        ActiveObject.update()
-        MobileObject.update()
+        ActiveObject.update(self)
+        MobileObject.update(self)
     
     def find_path(self)->None:
         #from current position and paths avalible determine
