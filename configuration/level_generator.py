@@ -82,6 +82,17 @@ def randomize_probs(probability:dict)->None:
         i += 1
     #print(probability)
 
+def end_points(start_point:tuple)->list[tuple]:
+    """a"""
+    if start_point[0] == 0:
+        return [(Tile.WIDTH-1, y) for y in range(Tile.HEIGHT)]
+    elif start_point[1] == 0:
+        return [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)]
+    elif start_point[0] == Tile.WIDTH-1:
+        return [(0, y) for y in range(Tile.HEIGHT)]
+    else:
+        return [(x, 0) for x in range(Tile.WIDTH)]
+
 probability = {
     Direction.UP.value: 250,
     Direction.DOWN.value: 250,
@@ -125,21 +136,19 @@ last_direction = first_direction
 counter = 0 #Počet kroků rovně
 while (x, y) not in border_pixels:
     direction = my_random_direction(probability)
-    #Pokud je v obraze a kroků je méně, než chci, tak jdi rovně
-    while last_direction == direction and counter < Config_lvl_gen.MIN_STRAIGHT_LINE and ((x, y) not in border_pixels):
-        x, y = move_to(direction, x, y)
-        draw_point(x, y, img)
-        counter += 1
-    #Else půjde podle probability
-    if counter >= Config_lvl_gen.MIN_STRAIGHT_LINE:
-        randomize_probs(probability)
-        direction = my_random_direction(probability)
-        x, y = move_to(direction, x, y)
-        draw_point(x, y, img)
-        update_probs(probability, last_direction)
-        counter = 0
+    x, y = move_to(direction, x, y)
+    draw_point(x, y, img)
 
-    last_direction = direction
+    if direction == last_direction:
+        update_probs(probability, last_direction)
+    else:
+        init_probs(probability, direction)
+        last_direction = direction
+
+#Nakreslí směr cílu
+a = end_points(chosen_start)
+print(a)
+img.putpixel(a[10], (255, 0, 0))
 
 # Save the image
 img.save("level_generator.png")
