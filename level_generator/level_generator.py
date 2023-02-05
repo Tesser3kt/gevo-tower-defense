@@ -43,7 +43,7 @@ def update_probs(probability:dict, last_direction:Direction) -> None:
     x, y = last_direction.value
     probability[(y, x)] += Config_lvl_gen.PROB_DECREASE // 2
     probability[(-y, -x)] += Config_lvl_gen.PROB_DECREASE // 2
-    #Preferovat smerz od startu, roydelit na mensi casti
+    #Preferovat smery od startu, rozdelit na mensi casti
 
 def draw_point(x:int, y:int, img:Image)->None:
     """Create 1 point on a specific pixel on the image"""
@@ -79,7 +79,7 @@ def randomize_probs(probability:dict)->None:
     #print(probability)
 
 def end_points(start_point:tuple)->list[tuple]:
-    """a"""
+    """Creates a list of coords of legal end points"""
     if start_point[0] == 0:
         return [(Tile.WIDTH-1, y) for y in range(Tile.HEIGHT)]
     elif start_point[1] == 0:
@@ -133,7 +133,6 @@ draw_point(x, y, img)
 last_direction = first_direction
 
 end_points = end_points(chosen_start)
-
 counter = 0 #Počet kroků rovně
 while (x, y) not in end_points:
     direction = my_random_direction(probability)
