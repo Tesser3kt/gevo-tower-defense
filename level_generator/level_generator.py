@@ -33,17 +33,38 @@ def init_probs(probability:dict, first_direction:Direction) -> None:
 
     probability[first_direction.value] = Config_lvl_gen.MAX_PROB
 
-def update_probs(probability:dict, last_direction:Direction) -> None:
+def update_probs(probability:dict, last_direction:Direction, pref_directions:list) -> None:
     """Update the probability after going in the same direction"""
 
+    
     #Sníží probabilitu o 1 prob. decrease
     probability[last_direction.value] -= Config_lvl_gen.PROB_DECREASE
 
     #Přidá probability do 2 zbývajících směrů (směry kolmé na předchozí)
     x, y = last_direction.value
-    probability[(y, x)] += Config_lvl_gen.PROB_DECREASE // 2
-    probability[(-y, -x)] += Config_lvl_gen.PROB_DECREASE // 2
+    if (y, x) in pref_directions:
+        probability[(y, x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
+        probability[(-y, -x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR - Config_lvl_gen.PROB_NUMERATOR)
+    else:
+        probability[(y, x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR-Config_lvl_gen.PROB_NUMERATOR)
+        probability[(-y, -x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
+
     #Preferovat smery od startu, rozdelit na mensi casti
+
+def pref_directions(start_point:tuple[int]) -> list[Direction]:
+    """"Return preferable directions from start point"""
+    x, y = start_point
+    pref_directions =[]
+    if x > Tile.WIDTH//2:
+        pref_directions.append(Direction.LEFT.value)
+    else:
+        pref_directions += [Direction.RIGHT.value]
+    if y > Tile.HEIGHT//2:
+        pref_directions += [Direction.UP.value]
+    else:
+        pref_directions += [Direction.DOWN.value]
+
+    return pref_directions
 
 def draw_point(x:int, y:int, img:Image)->None:
     """Create 1 point on a specific pixel on the image"""
@@ -68,15 +89,6 @@ def move_to(rnd_direction:Direction, x:int, y:int) -> tuple:
     x += rnd_direction.value[0]
     y += rnd_direction.value[1]
     return x, y
-
-
-def randomize_probs(probability:dict)->None:
-    """Set the probability to the config values"""
-    i = 0
-    for direction in Direction:
-        probability[direction.value] = list(Config_lvl_gen.RANDOM_PROBS.values())[i]
-        i += 1
-    #print(probability)
 
 def end_points(start_point:tuple)->list[tuple]:
     """Creates a list of coords of legal end points"""
@@ -132,22 +144,32 @@ x, y = x+first_direction.value[0], y+first_direction.value[1]
 draw_point(x, y, img)
 last_direction = first_direction
 
+pref_directions = pref_directions(chosen_start)
+
 end_points = end_points(chosen_start)
 counter = 0 #Počet kroků rovně
+
 while (x, y) not in end_points:
+
     direction = my_random_direction(probability)
     while not legal_move(*move_to(direction, x, y)):
         direction = my_random_direction(probability)
-        update_probs(probability, last_direction)
+        if probability[direction.value] == Config_lvl_gen.MAX_PROB:
+            update_probs(probability, direction, pref_directions)
         
     x, y = move_to(direction, x, y)
     draw_point(x, y, img)
 
     if direction == last_direction:
-        update_probs(probability, last_direction)
+        if counter > Config_lvl_gen.MIN_STRAIGHT_LINE:
+            update_probs(probability, last_direction, pref_directions)
+        else:
+            counter += 1
     else:
         init_probs(probability, direction)
         last_direction = direction
+        counter = 0
+
 
 
 

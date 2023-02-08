@@ -5,9 +5,13 @@ class Config_lvl_gen:
     MAX_TURNING_POINTS = Tile.WIDTH//8
     MIN_TURNING_POINTS = Tile.WIDTH//16
 
-    MAX_PROB = 1000
+    MAX_PROB = 40000
     PROB_DECREASE = 400
     MIN_STRAIGHT_LINE = 5
+
+    PROB_NUMERATOR = 3
+    PROB_DIVISOR = 4
+
 
     PATH_COLOR = (255, 255, 0) # Yellow
 
