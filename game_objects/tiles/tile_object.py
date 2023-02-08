@@ -23,4 +23,6 @@ class TileObject(InactiveObject,ImmobileObject):
         InactiveObject.update(self)
         ImmobileObject.update(self)
 
-    
+    def builded_on(self)->None:
+        self.type="occupied"
+

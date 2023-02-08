@@ -26,5 +26,10 @@ class ActiveObject(GameObject):
         self.animation_index %= len(self.animation)
         self.image=self.animation[self.animation_index]
 
+    def upgrade(self,animation:list[Surface]):
+        """ Upgrades the active object """
+        self.lvl+=1
+        self.animation = animation
+
  
           
