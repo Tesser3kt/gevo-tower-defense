@@ -23,5 +23,11 @@ class TextureLoader:
                 if sub_folder not in texture_dict[folder]:
                     texture_dict[folder][sub_folder] = {}
 
-                for final_folder in sub_folder:
+                for textures in os.listdir(os.path.join(assets_path, folder, sub_folder)):
+                    if textures not in texture_dict[folder][sub_folder]:
+                        texture_dict[folder][sub_folder][textures] = []
 
+                    for texture in os.listdir(os.path.join(assets_path, folder, sub_folder, textures)):
+                        image = load(texture)
+                        image = image.convert()
+                        texture_dict[folder][sub_folder][textures].append(image)
