@@ -3,9 +3,9 @@
 from enum import Enum
 import random
 from PIL import Image
-from level_generator_config import *
-from config import *
 
+from config.general_config import Tile
+from config.level_generator_config import *
 
 class Direction(Enum):
     """Class that contains Direction vectors"""
@@ -174,4 +174,5 @@ while (x, y) not in end_points:
 
 
 # Save the image
-img.save("level_generator.png")
+i = 0
+img.save(f"assets/game_objects/level_map/level_{i}.png")
