@@ -25,7 +25,8 @@ class TowerObject(ActiveObject,ImmobileObject):
 
     def upgrage(self):
         """ Update the coresponding stats based on the lvl"""
-
+        lvl+=1
+        #change the surface and stats
 
     def fire(self)->None:
         """ Fires the coresponding projectile type to the neares enemy """

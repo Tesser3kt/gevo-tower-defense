@@ -25,4 +25,4 @@ class TileObject(InactiveObject,ImmobileObject):
 
     def builded_on(self)->None:
         self.type="occupied"
-
+        #change the surface to the occupied surface (just the outside of the tower)
