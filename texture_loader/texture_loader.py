@@ -1,19 +1,24 @@
 """ texture loader module. """
 #from config.general_config import *
 from pygame.image import load
+import pygame as pg
 import os
-BASE_DIR = r"C:\Users\HP\repa\gevo-tower-defense-1\texture_loader"
-ASSETS_DIR = "HP"
+BASE_DIR = r"C:\Users\HP\repa\gevo-tower-defense-1"
+ASSETS_DIR = "assets"
 
 class TextureLoader:
     """ Texture loader class. """
     def __init__(self):
-        ...
+        #delete
+        pg.init()
+        pg.display.set_mode((800, 800),pg.SCALED)
+        #delete end
 
     def load_all_textures(self) -> dict:
-        """ Load all textures. """
-        #assets_path = os.path.join(BASE_DIR, ASSETS_DIR)
-        assets_path = r"C:\Users\HP\repa\gevo-tower-defense-1\texture_loader"
+        """ Load all textures. Returns dictionary of textures sorted by folders."""
+        assets_path = os.path.join(BASE_DIR, ASSETS_DIR)
+        #assets_path = r"C:\Users\HP\repa\gevo-tower-defense-1\texture_loader"
+        
 
         texture_dict = {}
         for folder in os.listdir(assets_path):
@@ -30,7 +35,7 @@ class TextureLoader:
                         texture_dict[folder][sub_folder][textures] = []
 
                     for texture in os.listdir(os.path.join(assets_path, folder, sub_folder, textures)):
-                        image = load(texture)
+                        image = load(os.path.join(assets_path, folder, sub_folder, textures, texture))
                         image = image.convert()
                         texture_dict[folder][sub_folder][textures].append(image)
 
