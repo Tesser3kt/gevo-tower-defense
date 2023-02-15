@@ -1,6 +1,7 @@
 from inactive_object import InactiveObject
 from immobile_object import ImmobileObject
 
+from tile_type import TileType
 from pygame.surface import Surface
 
 class TileObject(InactiveObject,ImmobileObject):
@@ -10,7 +11,7 @@ class TileObject(InactiveObject,ImmobileObject):
         self, x: int, y: int, width: int, height: int, image: Surface,
         #possible types:
         #occupied, buildable, wall, default
-        type:str="default",
+        type:TileType=TileType.DEFAULT
 
     ) -> None:
         InactiveObject.__init__(x, y, width, height, image)
@@ -24,5 +25,5 @@ class TileObject(InactiveObject,ImmobileObject):
         ImmobileObject.update(self)
 
     def builded_on(self)->None:
-        self.type="occupied"
+        self.type=TileType.OCCUPIED
         #change the surface to the occupied surface (just the outside of the tower)
