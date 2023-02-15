@@ -3,9 +3,10 @@
 from pygame.image import load
 import pygame as pg
 import os
+# delete
 BASE_DIR = r"C:\Users\HP\repa\gevo-tower-defense-1"
 ASSETS_DIR = "assets"
-
+# delete
 class TextureLoader:
     """ Texture loader class. """
     def __init__(self):
@@ -17,7 +18,6 @@ class TextureLoader:
     def load_all_textures(self) -> dict:
         """ Load all textures. Returns dictionary of textures sorted by folders."""
         assets_path = os.path.join(BASE_DIR, ASSETS_DIR)
-        #assets_path = r"C:\Users\HP\repa\gevo-tower-defense-1\texture_loader"
         
 
         texture_dict = {}
@@ -41,6 +41,7 @@ class TextureLoader:
 
         return texture_dict
         
-
+# delete
 x = TextureLoader()
 print(x.load_all_textures())
+#delete end
