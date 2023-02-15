@@ -175,4 +175,4 @@ while (x, y) not in end_points:
 
 # Save the image
 i = 0
-img.save(f"assets/game_objects/level_map/level_{i}.png")
+img.save(f"assets/level_maps/level_{i}.png")

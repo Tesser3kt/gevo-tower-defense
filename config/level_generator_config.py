@@ -1,5 +1,5 @@
 """Configuration for the level generator."""
-from general_config import Tile
+from config.general_config import Tile
 
 class Config_lvl_gen:
     MAX_TURNING_POINTS = Tile.WIDTH//8
