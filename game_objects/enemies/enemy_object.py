@@ -1,6 +1,7 @@
 from active_object import ActiveObject
 from mobile_object import MobileObject
 
+from enemy_type import EnemyType
 from pygame.surface import Surface
 
 
