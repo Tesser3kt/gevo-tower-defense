@@ -1,5 +1,5 @@
 from pygame.surface import Surface
-
+from tower_type import TowerType
 from tower_object import TowerObject
 
 class SplashTower(TowerObject):
@@ -12,6 +12,8 @@ class SplashTower(TowerObject):
      splash_animation:list[Surface]
     )->None:
 
+    TowerObject.__init__(x,y,width,height,image,animation,damage,reload_time,
+    tower_type,animation_index,lvl)
     self.splash_animation=splash_animation
 
     def update(self):

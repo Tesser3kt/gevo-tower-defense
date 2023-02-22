@@ -3,7 +3,7 @@ from pygame.surface import Surface
 from tower_object import TowerObject
 from tower_type import TowerType
 
-class NormalTower(TowerObject):
+class ProjectileTower(TowerObject):
     """ Class for normal tower objects """
 
     def __init__(
