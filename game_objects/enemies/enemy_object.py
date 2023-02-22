@@ -5,7 +5,7 @@ from enemy_type import EnemyType
 from pygame.surface import Surface
 
 
-class EnemyObejct(ActiveObject,MobileObject):
+class EnemyObject(ActiveObject,MobileObject):
     """ Most general class for enemy objects """
 
     def __init__(self, hp:int, 
