@@ -32,7 +32,7 @@ class TowerObject(ActiveObject,ImmobileObject):
         #change the surface and stats
 
     def reloaded(self) -> bool:
-        if self.last_fired-self.reload_time<=0:
+        if (time.time()-self.last_fired)-self.reload_time<=0:
             return True
         return False
 
