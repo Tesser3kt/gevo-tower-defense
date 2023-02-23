@@ -38,5 +38,5 @@ class TowerObject(ActiveObject,ImmobileObject):
 
     def fire(self)->None:
         """ Fires the coresponding projectile type to the neares enemy """
-        self.last_fired=time.clock_gettime()
+        self.last_fired=time.time()
         
