@@ -4,4 +4,4 @@ class EnemyType(Enum):
     CAMO ="camo"
     CASUAL = "casual"
     BRUISER = "bruiser"
-    BOS = "bos"
+    BOSS = "boss"
