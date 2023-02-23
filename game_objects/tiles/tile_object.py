@@ -24,6 +24,6 @@ class TileObject(InactiveObject,ImmobileObject):
         InactiveObject.update(self)
         ImmobileObject.update(self)
 
-    def builded_on(self)->None:
+    def built_on(self)->None:
         self.type=TileType.OCCUPIED
         #change the surface to the occupied surface (just the outside of the tower)
