@@ -22,16 +22,16 @@ class TowerObject(ActiveObject,ImmobileObject):
         self.tower_type=tower_type
         self.last_fired=0
 
-    def update(self):
+    def update(self) -> None:
         ActiveObject.update(self)
         ImmobileObject.update(self)
 
-    def upgrage(self):
-        """ Update the coresponding stats based on the lvl"""
-        lvl+=1
+    def upgrage(self) -> None:
+        """ Update the corresponding stats based on the lvl"""
+        self.lvl+=1
         #change the surface and stats
 
-    def reloaded(self):
+    def reloaded(self) -> bool:
         if self.last_fired-self.reload_time<=0:
             return True
         return False
