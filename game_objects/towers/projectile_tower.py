@@ -4,7 +4,7 @@ from tower_object import TowerObject
 from tower_type import TowerType
 
 class ProjectileTower(TowerObject):
-    """ Class for normal tower objects """
+    """ Class for projectile tower objects """
 
     def __init__(
      self, x: int, y: int, width: int, height: int, image: Surface,
