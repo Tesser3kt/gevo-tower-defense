@@ -32,9 +32,7 @@ class TowerObject(ActiveObject,ImmobileObject):
         #change the surface and stats
 
     def reloaded(self) -> bool:
-        if (time.time()-self.last_fired)-self.reload_time<=0:
-            return True
-        return False
+        return time.time() - self.last_fired >= self.reload_time
 
     def fire(self)->None:
         """ Fires the coresponding projectile type to the neares enemy """
