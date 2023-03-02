@@ -15,13 +15,13 @@ class Basic:
     AMMO_TYPE = "Bullet"
 
     IMAGE = "basic.png"
-    IMAGE_UPGRADE_1 = "basic_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "basic_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "basic_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "basic_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "basic_upgrade_5.png"
+    IMAGE_UPGRADE_1 = "Basic_upgrade_1.png"
+    IMAGE_UPGRADE_2 = "Basic_upgrade_2.png"
+    IMAGE_UPGRADE_3 = "Basic_upgrade_3.png"
+    IMAGE_UPGRADE_4 = "Basic_upgrade_4.png"
+    IMAGE_UPGRADE_5 = "Basic_upgrade_5.png"
 
-class Okular:
+class Eyes:
     ABLILITY = "Can attack all enemy types"
 
     RANGE = 3
@@ -35,14 +35,14 @@ class Okular:
 
     AMMO_TYPE = "Bullet"
 
-    IMAGE = "okular.png"
-    IMAGE_UPGRADE_1 = "okular_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "okular_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "okular_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "okular_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "okular_upgrade_5.png"
+    IMAGE = "eyes.png"
+    IMAGE_UPGRADE_1 = "eyes_upgrade_1.png"
+    IMAGE_UPGRADE_2 = "eyes_upgrade_2.png"
+    IMAGE_UPGRADE_3 = "eyes_upgrade_3.png"
+    IMAGE_UPGRADE_4 = "eyes_upgrade_4.png"
+    IMAGE_UPGRADE_5 = "eyes_upgrade_5.png"
 
-class Canon:
+class Cannon:
     ABLILITY = "Splash damage"
 
     RANGE = 6
@@ -56,12 +56,12 @@ class Canon:
 
     AMMO_TYPE = "Rocket"
 
-    IMAGE = "canon.png"
-    IMAGE_UPGRADE_1 = "canon_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "canon_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "canon_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "canon_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "canon_upgrade_5.png"
+    IMAGE = "cannon.png"
+    IMAGE_UPGRADE_1 = "cannon_upgrade_1.png"
+    IMAGE_UPGRADE_2 = "cannon_upgrade_2.png"
+    IMAGE_UPGRADE_3 = "cannon_upgrade_3.png"
+    IMAGE_UPGRADE_4 = "cannon_upgrade_4.png"
+    IMAGE_UPGRADE_5 = "cannon_upgrade_5.png"
 
 class Yeti:
     ABILITY = "Freeze enemies"

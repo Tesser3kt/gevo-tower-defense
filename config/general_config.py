@@ -10,6 +10,7 @@ class Tile:
     PIXEL_SIZE = 16
     HEIGHT = 50
     WIDTH = 60
+    # 60T*50T, 1T = 16px
 
 class Directory:
     BASE_DIR = "Amogus"
@@ -40,8 +41,9 @@ class Difficulty:
     HARD = 3
     HARDER = 4
     IMPOSSIBLE = 5
-#   IDK CO TO JE TO NADTÍM
+#   IDK CO TO JE, možná to bude užitečný
 
+# Asi to může být random, ale tak prozatím jsem to dal sem
     NOOB_SPAWN_PROBS = {
         "enemies.Normal" : 1, 
         "enemies.Fast" : 0,
