@@ -4,7 +4,7 @@ from enum import Enum
 import random
 from PIL import Image
 
-from config.general_config import Tile
+from config.general_config import Tile, Colors
 from config.level_generator_config import *
 
 class Direction(Enum):
@@ -68,7 +68,7 @@ def pref_directions(start_point:tuple[int]) -> list[Direction]:
 
 def draw_point(x:int, y:int, img:Image)->None:
     """Create 1 point on a specific pixel on the image"""
-    img.putpixel((x, y), Config_lvl_gen.PATH_COLOR)
+    img.putpixel((x, y), Colors.PATH)
 
 def my_random_direction(probability:dict) -> Direction:
     """Return a random direction based on probabilities"""
