@@ -104,75 +104,75 @@ def end_points(start_point:tuple)->list[tuple]:
 def legal_move(x:int, y:int):
     return 0<=x<Tile.WIDTH and 0<=y<Tile.HEIGHT
 
-probability = {
-    Direction.UP.value: 250,
-    Direction.DOWN.value: 250,
-    Direction.LEFT.value: 250,
-    Direction.RIGHT.value: 250
-}
+def generate_level(lvl:int, difficulty:int):
+    """Generate a level"""
 
-img = Image.new('RGB', (Tile.WIDTH, Tile.HEIGHT), color = (0, 0, 0))
+    probability = {
+        Direction.UP.value: 250,
+        Direction.DOWN.value: 250,
+        Direction.LEFT.value: 250,
+        Direction.RIGHT.value: 250
+    }
 
-#Vytvoří random start na random ose a pak vybere 1 start 
-start_osa_1 = 0, random.randint(5, Tile.HEIGHT-5)
-start_osa_2 = random.randint(5, Tile.WIDTH-5), 0
-start_osa_3 = Tile.WIDTH-1, random.randint(5, Tile.HEIGHT-5)
-start_osa_4 = random.randint(5, Tile.WIDTH-5), Tile.HEIGHT-1
-#Vybraný start
-chosen_start = random.choice([start_osa_1, start_osa_2, start_osa_3, start_osa_4])
+    img = Image.new('RGB', (Tile.WIDTH, Tile.HEIGHT), color = (0, 0, 0))
 
-# Define the border pixels
-border_pixels = set(
-    [(x, 0) for x in range(Tile.WIDTH)] + 
-    [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)] + 
-    [(0, y) for y in range(1, Tile.HEIGHT-1)] + 
-    [(Tile.WIDTH-1, y) for y in range(1, Tile.HEIGHT-1)]
-)
+    #Vytvoří random start na random ose a pak vybere 1 start 
+    start_osa_1 = 0, random.randint(5, Tile.HEIGHT-5)
+    start_osa_2 = random.randint(5, Tile.WIDTH-5), 0
+    start_osa_3 = Tile.WIDTH-1, random.randint(5, Tile.HEIGHT-5)
+    start_osa_4 = random.randint(5, Tile.WIDTH-5), Tile.HEIGHT-1
+    #Vybraný start
+    chosen_start = random.choice([start_osa_1, start_osa_2, start_osa_3, start_osa_4])
 
-#Start direction
-first_direction = first_direction(chosen_start)
+    # Define the border pixels
+    border_pixels = set(
+        [(x, 0) for x in range(Tile.WIDTH)] + 
+        [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)] + 
+        [(0, y) for y in range(1, Tile.HEIGHT-1)] + 
+        [(Tile.WIDTH-1, y) for y in range(1, Tile.HEIGHT-1)]
+    )
 
-#Initialize probabilities
-init_probs(probability, first_direction)
+    #Start direction
+    first_direction_1 = first_direction(chosen_start)
 
-x, y = chosen_start
-#Nakreslí start
-draw_point(*chosen_start, img)
+    #Initialize probabilities
+    init_probs(probability, first_direction_1)
 
-#Posunese o pixel dál
-x, y = x+first_direction.value[0], y+first_direction.value[1]
-draw_point(x, y, img)
-last_direction = first_direction
+    x, y = chosen_start
+    #Nakreslí start
+    draw_point(*chosen_start, img)
 
-pref_directions = pref_directions(chosen_start)
-
-end_points = end_points(chosen_start)
-counter = 0 #Počet kroků rovně
-
-while (x, y) not in end_points:
-
-    direction = my_random_direction(probability)
-    while not legal_move(*move_to(direction, x, y)):
-        direction = my_random_direction(probability)
-        if probability[direction.value] == Config_lvl_gen.MAX_PROB:
-            update_probs(probability, direction, pref_directions)
-        
-    x, y = move_to(direction, x, y)
+    #Posunese o pixel dál
+    x, y = x+first_direction_1.value[0], y+first_direction_1.value[1]
     draw_point(x, y, img)
+    last_direction = first_direction_1
 
-    if direction == last_direction:
-        if counter > Config_lvl_gen.MIN_STRAIGHT_LINE:
-            update_probs(probability, last_direction, pref_directions)
+    pref_directions_1 = pref_directions(chosen_start)
+
+    end_points_1 = end_points(chosen_start)
+    counter = 0 #Počet kroků rovně
+
+    while (x, y) not in end_points_1:
+
+        direction = my_random_direction(probability)
+        while not legal_move(*move_to(direction, x, y)):
+            direction = my_random_direction(probability)
+            if probability[direction.value] == Config_lvl_gen.MAX_PROB:
+                update_probs(probability, direction, pref_directions_1)
+            
+        x, y = move_to(direction, x, y)
+        draw_point(x, y, img)
+
+        if direction == last_direction:
+            if counter > Config_lvl_gen.MIN_STRAIGHT_LINE:
+                update_probs(probability, last_direction, pref_directions_1)
+            else:
+                counter += 1
         else:
-            counter += 1
-    else:
-        init_probs(probability, direction)
-        last_direction = direction
-        counter = 0
+            init_probs(probability, direction)
+            last_direction = direction
+            counter = 0
 
-
-
-
-# Save the image
-i = 0
-img.save(f"assets/level_maps/level_{i}.png")
+    # Save the image
+    i = lvl
+    img.save(f"assets/level_maps/level_{i}.png")
