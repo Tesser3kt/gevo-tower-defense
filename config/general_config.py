@@ -1,5 +1,9 @@
 """Configuration file"""
-import enemies, towers, projectiles
+from config.enemies import *
+from config.projectiles import *
+from config.towers import *
+
+import os
 
 
 class Window:  
@@ -13,8 +17,8 @@ class Tile:
     # 60T*50T, 1T = 16px
 
 class Directory:
-    BASE_DIR = "Amogus"
-    ASSETS_DIR = "Amogus"
+    BASE_DIR = os.getcwd()
+    ASSETS_DIR = os.path.join(BASE_DIR, "assets")
     
 class Economy:
     STARTING_MONEY = 100
@@ -41,54 +45,47 @@ class Difficulty:
     HARD = 3
     HARDER = 4
     IMPOSSIBLE = 5
-#   IDK CO TO JE, možná to bude užitečný
+#   To by mohlo být asi nějaké menu?
 
 # Asi to může být random, ale tak prozatím jsem to dal sem
-    NOOB_SPAWN_PROBS = {
-        "enemies.Normal" : 1, 
-        "enemies.Fast" : 0,
-        "enemies.Camo" : 0,
-        "enemies.Boss" : 0,
-        "enemies.Tank" : 0
-    }
+class Nooob_spawn_probs:
+    NORMAL = 1
+    FAST = 0
+    CAMO = 0
+    BOSS = 0
+    TANK = 0
 
-    EASY_SPAWN_PROBS = {
-        "enemies.Normal" : 0.5,
-        "enemies.Fast" : 0.5,
-        "enemies.Camo" : 0,
-        "enemies.Boss" : 0,
-        "enemies.Tank" : 0
-    }
+class Easy_spawn_probs:
+    NORMAL = 0.5
+    FAST = 0.5
+    CAMO = 0
+    BOSS = 0
+    TANK = 0
+    
+class NORMAL_spawn_probs:
+    NORMAL = 0.25
+    FAST = 0.25
+    CAMO = 0.2
+    BOSS = 0.1
+    TANK = 0.2
 
-    NORMAL_SPAWN_PROBS = {
-        "enemies.Normal" : 0.25,
-        "enemies.Fast" : 0.25,
-        "enemies.Camo" : 0.2,
-        "enemies.Boss" : 0.1,
-        "enemies.Tank" : 0.2
-    }
+class Hard_spawn_probs:
+    NORMAL = 0.2
+    FAST = 0.2
+    CAMO = 0.2
+    BOSS = 0.1
+    TANK = 0.3
 
-    HARD_SPAWN_PROBS = {
-        "enemies.Normal" : 0.4,
-        "enemies.Fast" : 0.2,
-        "enemies.Camo" : 0.2,
-        "enemies.Boss" : 0.1,
-        "enemies.Tank" : 0.1
-    }
+class Harder_spawn_probs:
+    NORMAL = 0.1
+    FAST = 0.1
+    CAMO = 0.1
+    BOSS = 0.1
+    TANK = 0.6
 
-    HARDER_SPAWN_PROBS = {
-        "enemies.Normal" : 0.2,
-        "enemies.Fast" : 0.2,
-        "enemies.Camo" : 0.2,
-        "enemies.Boss" : 0.2,
-        "enemies.Tank" : 0.2
-    }
-
-    IMPOSSIBLE_SPAWN_PROBS = {
-        "enemies.Normal" : 0.05,
-        "enemies.Fast" : 0.05,
-        "enemies.Camo" : 0.1,
-        "enemies.Boss" : 0.5,
-        "enemies.Tank" : 0.3
-    }
-
+class Impossible_spawn_probs:
+    NORMAL = 0.1
+    FAST = 0.1
+    CAMO = 0.2
+    BOSS = 0.2
+    TANK = 0.4
