@@ -12,9 +12,6 @@ class Config_lvl_gen:
     PROB_NUMERATOR = 3
     PROB_DIVISOR = 4
 
-
-    PATH_COLOR = (255, 255, 0) # Yellow
-
     RANDOM_PROBS = {
         "UP": 350,
         "DOWN": 150,

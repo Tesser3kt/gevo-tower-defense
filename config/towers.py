@@ -1,109 +1,97 @@
-"""Configuretion file for towers"""
+"""Configuration file for towers"""
+from enum import Enum
+
+class Ammo(Enum):
+    BULLET = "Bullet"
+    LASER = "Laser"
+    ROCKET = "Rocket"
+    SNOWFLAKE = "Snowflake"
+
+class Ability(Enum):
+    ATTACK_ALL = "Can attack all enemy types"
+    SPLASH_DAMAGE = "Splash damage"
+    FREEZE_ENEMIES = "Freeze enemies"
+    DESTROYS_CAMOUFLAGE = "Destroys camouflage, therefore they act like normal enemies"
 
 class Basic:
-    ABIILITY = None
+    ABILITY = None
 
     RANGE = 2
     COST = 200
 
     DAMAGE = 1
-    UPGRADED_DAMAGE = DAMAGE * 1.5
+    DAMAGE_PER_LEVEL = 1.5
 
-    RECHARGE_TIME = 1
-    RECHARGE_TIME_UPGRADE = RECHARGE_TIME//1.125
+    RELOAD_TIME = 1
+    RELOAD_TIME_PER_LEVEL = -0.025
 
-    AMMO_TYPE = "Bullet"
+    AMMO_TYPE = Ammo.BULLET
 
     IMAGE = "basic.png"
-    IMAGE_UPGRADE_1 = "Basic_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "Basic_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "Basic_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "Basic_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "Basic_upgrade_5.png"
 
 class Eyes:
-    ABLILITY = "Can attack all enemy types"
+    ABILITY = Ability.ATTACK_ALL
 
     RANGE = 3
     COST = 325
 
     DAMAGE = 1.5
-    UPGRADED_DAMAGE = DAMAGE * 1.5
+    DAMAGE_PER_LEVEL = 1.5
 
-    RECHARGE_TIME = 1
-    RECHARGE_TIME_UPGRADE = RECHARGE_TIME//1.25
+    RELOAD_TIME = 1
+    RELOAD_TIME_PER_LEVEL = -0.125
 
-    AMMO_TYPE = "Bullet"
+    AMMO_TYPE = Ammo.BULLET
 
     IMAGE = "eyes.png"
-    IMAGE_UPGRADE_1 = "eyes_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "eyes_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "eyes_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "eyes_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "eyes_upgrade_5.png"
 
 class Cannon:
-    ABLILITY = "Splash damage"
+    ABILITY = Ability.SPLASH_DAMAGE
 
     RANGE = 6
     COST = 500
 
     DAMAGE = 5
-    UPGRADED_DAMAGE = DAMAGE * 1.5
+    DAMAGE_PER_LEVEL = 1.5
 
-    RECHARGE_TIME = 1
-    RECHARGE_TIME_UPGRADE = RECHARGE_TIME//1.25
+    RELOAD_TIME = 1
+    RELOAD_TIME_PER_LEVEL = -0.125
 
-    AMMO_TYPE = "Rocket"
+    AMMO_TYPE = Ammo.ROCKET
 
     IMAGE = "cannon.png"
-    IMAGE_UPGRADE_1 = "cannon_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "cannon_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "cannon_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "cannon_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "cannon_upgrade_5.png"
 
 class Yeti:
-    ABILITY = "Freeze enemies"
+    ABILITY = Ability.FREEZE_ENEMIES
 
     RANGE = 3
     COST = 750
 
     DAMAGE = 0
-    UPGRADED_DAMAGE = DAMAGE * 1.5
+    DAMAGE_PER_LEVEL = 1.5
 
-    RECHARGE_TIME = 0
-    RECHARGE_TIME_UPGRADE = RECHARGE_TIME//1.25
+    RELOAD_TIME = 0
+    RELOAD_TIME_PER_LEVEL = 0
 
     FREEZE_TIME = 0.5
-    UPGRADED_FREEZE_TIME = FREEZE_TIME * 1.5
+    FREEZE_TIME_PER_LEVEL =  0.5
 
-    AMMO_TYPE = "Snowflake"
+    AMMO_TYPE = Ammo.SNOWFLAKE
 
     IMAGE = "yeti.png"
-    IMAGE_UPGRADE_1 = "yeti_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "yeti_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "yeti_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "yeti_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "yeti_upgrade_5.png"
 
 class Laser:
-    ABILITY = "Destroys camouflage paint from hidden cars, therefore they act like normal enemies"
+    ABILITY = Ability.DESTROYS_CAMOUFLAGE
 
     RANGE = 5
     COST = 1000
 
     DAMAGE = 0.5
-    UPGRADED_DAMAGE = DAMAGE * 2
+    DAMAGE_PER_LEVEL = 2
 
-    RECHARGE_TIME = 0
-    RECHARGE_TIME_UPGRADE = RECHARGE_TIME//1.25
+    RELOAD_TIME = 0
+    RELOAD_TIME_PER_LEVEL = 0
 
-    AMMO_TYPE = "Laser"
+    AMMO_TYPE = Ammo.LASER
 
     IMAGE = "laser.png"
-    IMAGE_UPGRADE_1 = "laser_upgrade_1.png"
-    IMAGE_UPGRADE_2 = "laser_upgrade_2.png"
-    IMAGE_UPGRADE_3 = "laser_upgrade_3.png"
-    IMAGE_UPGRADE_4 = "laser_upgrade_4.png"
-    IMAGE_UPGRADE_5 = "laser_upgrade_5.png"
