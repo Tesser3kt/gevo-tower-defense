@@ -1,10 +1,5 @@
 """Configuration file"""
-from config.enemies import *
-from config.projectiles import *
-from config.towers import *
-
-import os
-
+from config.general_imports import *
 
 class Window:  
     HEIGHT = 800
@@ -48,44 +43,44 @@ class Difficulty:
 #   To by mohlo být asi nějaké menu?
 
 # Asi to může být random, ale tak prozatím jsem to dal sem
-class Nooob_spawn_probs:
-    NORMAL = 1
-    FAST = 0
+class Noob_spawn_probs:
+    CASUAL = 1
+    SPEEDER = 0
     CAMO = 0
     BOSS = 0
-    TANK = 0
+    BRUISER = 0
 
 class Easy_spawn_probs:
-    NORMAL = 0.5
-    FAST = 0.5
+    CASUAL = 0.5
+    SPEEDER = 0.5
     CAMO = 0
     BOSS = 0
-    TANK = 0
+    BRUISER = 0
     
-class NORMAL_spawn_probs:
-    NORMAL = 0.25
-    FAST = 0.25
+class Normal_spawn_probs:
+    CASUAL = 0.25
+    SPEEDER = 0.25
     CAMO = 0.2
     BOSS = 0.1
-    TANK = 0.2
+    BRUISER = 0.2
 
 class Hard_spawn_probs:
-    NORMAL = 0.2
-    FAST = 0.2
+    CASUAL = 0.2
+    SPEEDER = 0.2
     CAMO = 0.2
     BOSS = 0.1
-    TANK = 0.3
+    BRUISER = 0.3
 
 class Harder_spawn_probs:
-    NORMAL = 0.1
-    FAST = 0.1
+    CASUAL = 0.1
+    SPEEDER = 0.1
     CAMO = 0.1
     BOSS = 0.1
-    TANK = 0.6
+    BRUISER = 0.6
 
 class Impossible_spawn_probs:
-    NORMAL = 0.1
-    FAST = 0.1
+    CASUAL = 0.1
+    SPEEDER = 0.1
     CAMO = 0.2
     BOSS = 0.2
-    TANK = 0.4
+    BRUISER = 0.4

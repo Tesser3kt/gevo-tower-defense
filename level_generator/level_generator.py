@@ -104,8 +104,45 @@ def end_points(start_point:tuple)->list[tuple]:
 def legal_move(x:int, y:int):
     return 0<=x<Tile.WIDTH and 0<=y<Tile.HEIGHT
 
-def generate_level(lvl:int, difficulty:int):
+def generate_level(lvl:int):
     """Generate a level"""
+
+    #NOOB
+    if lvl == 0:
+        Config_lvl_gen.PROB_DECREASE = 3000
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 0
+        Config_lvl_gen.MAX_PROB = 4000
+    
+    #EASY
+    elif lvl == 1:
+        Config_lvl_gen.PROB_DECREASE = 750
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 5
+        Config_lvl_gen.MAX_PROB = 4000
+
+    #NORMAL
+    elif lvl == 2:
+        Config_lvl_gen.PROB_DECREASE = 450
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 10
+        Config_lvl_gen.MAX_PROB = 4000
+
+    #HARD
+    elif lvl == 3:
+        Config_lvl_gen.PROB_DECREASE = 250
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 5
+        Config_lvl_gen.MAX_PROB = 8000
+
+    #HARDER
+    elif lvl == 4:
+        Config_lvl_gen.PROB_DECREASE = 20
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 10
+        Config_lvl_gen.MAX_PROB = 4000
+
+    #IMPOSSIBLE
+    elif lvl == 5:
+        Config_lvl_gen.PROB_DECREASE = 0
+        Config_lvl_gen.MIN_STRAIGHT_LINE = 40
+        Config_lvl_gen.MAX_PROB = 100
+        #Bude tam rovná čára, ale hodně zdí
 
     probability = {
         Direction.UP.value: 250,
@@ -125,12 +162,12 @@ def generate_level(lvl:int, difficulty:int):
     chosen_start = random.choice([start_osa_1, start_osa_2, start_osa_3, start_osa_4])
 
     # Define the border pixels
-    border_pixels = set(
-        [(x, 0) for x in range(Tile.WIDTH)] + 
-        [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)] + 
-        [(0, y) for y in range(1, Tile.HEIGHT-1)] + 
-        [(Tile.WIDTH-1, y) for y in range(1, Tile.HEIGHT-1)]
-    )
+    #border_pixels = set(
+    #    [(x, 0) for x in range(Tile.WIDTH)] + 
+    #    [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)] + 
+    #    [(0, y) for y in range(1, Tile.HEIGHT-1)] + 
+    #    [(Tile.WIDTH-1, y) for y in range(1, Tile.HEIGHT-1)]
+    #)
 
     #Start direction
     first_direction_1 = first_direction(chosen_start)
@@ -174,5 +211,4 @@ def generate_level(lvl:int, difficulty:int):
             counter = 0
 
     # Save the image
-    i = lvl
-    img.save(f"assets/level_maps/level_{i}.png")
+    img.save(f"assets/level_maps/level_{lvl}.png")

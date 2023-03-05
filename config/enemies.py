@@ -1,22 +1,16 @@
 """Enemies configuration file"""
-from enum import Enum
-
-class Ability(Enum):
-    MASKED = "Masked"
-    SPEEDER = "Speeder"
-    BOSS = "Boss"
-    BRUISER = "Bruiser"
+from config.enemy_ability import Ability
 
 class Casual:
     """casual enemy"""
-    ABLITY = None
+    ABILITY = None
     HEALTH = 1
     SPEED = 0.5
 
     HEALTH_PER_LEVEL = 2
     SPEED_PER_LEVEL = 0.25
 
-    IMAGE = "casual.png"
+    IMAGE = "casual"
 
 class Camo:
     """camo enemy"""
@@ -27,9 +21,7 @@ class Camo:
     HEALTH_PER_LEVEL = 2
     SPEED_PER_LEVEL = 0.25
 
-    IMAGE = "camo.png"
-
-
+    IMAGE = "camo"
 
 class Speeder:
     """speeder enemy"""
@@ -40,7 +32,7 @@ class Speeder:
     HEALTH_PER_LEVEL = 1.5
     SPEED_PER_LEVEL = 0.5
 
-    IMAGE = "speeder.png"
+    IMAGE = "speeder"
 
 class Boss:
     """boss enemy"""
@@ -51,7 +43,7 @@ class Boss:
     HEALTH_PER_LEVEL = 10
     SPEED_PER_LEVEL = 2
 
-    IMAGE = "boss.png"
+    IMAGE = "boss"
 
 class Bruiser:
     """bruiser enemy"""
@@ -62,4 +54,4 @@ class Bruiser:
     HEALTH_PER_LEVEL = 5
     SPEED_PER_LEVEL = 0.25
 
-    IMAGE = "bruiser.png"
+    IMAGE = "bruiser"

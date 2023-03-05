@@ -1,17 +1,6 @@
 """Configuration file for towers"""
-from enum import Enum
-
-class Ammo(Enum):
-    BULLET = "Bullet"
-    LASER = "Laser"
-    ROCKET = "Rocket"
-    SNOWFLAKE = "Snowflake"
-
-class Ability(Enum):
-    ATTACK_ALL = "Can attack all enemy types"
-    SPLASH_DAMAGE = "Splash damage"
-    FREEZE_ENEMIES = "Freeze enemies"
-    DESTROYS_CAMOUFLAGE = "Destroys camouflage, therefore they act like normal enemies"
+from config.towers_ability import Ability
+from config.towers_ammo import Ammo
 
 class Basic:
     ABILITY = None
@@ -27,7 +16,7 @@ class Basic:
 
     AMMO_TYPE = Ammo.BULLET
 
-    IMAGE = "basic.png"
+    IMAGE = "basic"
 
 class Eyes:
     ABILITY = Ability.ATTACK_ALL
@@ -43,7 +32,7 @@ class Eyes:
 
     AMMO_TYPE = Ammo.BULLET
 
-    IMAGE = "eyes.png"
+    IMAGE = "eyes"
 
 class Cannon:
     ABILITY = Ability.SPLASH_DAMAGE
@@ -59,7 +48,7 @@ class Cannon:
 
     AMMO_TYPE = Ammo.ROCKET
 
-    IMAGE = "cannon.png"
+    IMAGE = "cannon"
 
 class Yeti:
     ABILITY = Ability.FREEZE_ENEMIES
@@ -78,7 +67,7 @@ class Yeti:
 
     AMMO_TYPE = Ammo.SNOWFLAKE
 
-    IMAGE = "yeti.png"
+    IMAGE = "yeti"
 
 class Laser:
     ABILITY = Ability.DESTROYS_CAMOUFLAGE
@@ -94,4 +83,4 @@ class Laser:
 
     AMMO_TYPE = Ammo.LASER
 
-    IMAGE = "laser.png"
+    IMAGE = "laser"
