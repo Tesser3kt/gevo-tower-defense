@@ -20,28 +20,28 @@ def first_direction(start_point:tuple[int]) -> Direction:
     else:
         return Direction.UP
 
-def init_probs(probability:dict, first_direction:Direction) -> None:
+def init_probs(probability:dict, first_direction:Direction, max_prob:int) -> None:
     """Change all probabilities to zero and than change the starting direction probability to 100 %"""
     for direction in Direction:
         probability[direction.value] = 0
 
-    probability[first_direction.value] = Config_lvl_gen.MAX_PROB
+    probability[first_direction.value] = max_prob
 
-def update_probs(probability:dict, last_direction:Direction, pref_directions:list) -> None:
+def update_probs(probability:dict, last_direction:Direction, pref_directions:list, prob_decrease:int) -> None:
     """Update the probability after going in the same direction"""
 
     
     #Sníží probabilitu o 1 prob. decrease
-    probability[last_direction.value] -= Config_lvl_gen.PROB_DECREASE
+    probability[last_direction.value] -= prob_decrease
 
     #Přidá probability do 2 zbývajících směrů (směry kolmé na předchozí)
     x, y = last_direction.value
     if (y, x) in pref_directions:
-        probability[(y, x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
-        probability[(-y, -x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR - Config_lvl_gen.PROB_NUMERATOR)
+        probability[(y, x)] += (prob_decrease // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
+        probability[(-y, -x)] += (prob_decrease // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR - Config_lvl_gen.PROB_NUMERATOR)
     else:
-        probability[(y, x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR-Config_lvl_gen.PROB_NUMERATOR)
-        probability[(-y, -x)] += (Config_lvl_gen.PROB_DECREASE // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
+        probability[(y, x)] += (prob_decrease // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_DIVISOR-Config_lvl_gen.PROB_NUMERATOR)
+        probability[(-y, -x)] += (prob_decrease // Config_lvl_gen.PROB_DIVISOR)*(Config_lvl_gen.PROB_NUMERATOR)
 
     #Preferovat smery od startu, rozdelit na mensi casti
 
@@ -101,42 +101,7 @@ def legal_move(x:int, y:int):
 def generate_level(lvl:int):
     """Generate a level"""
 
-    #NOOB
-    if lvl == 0:
-        Config_lvl_gen.PROB_DECREASE = 3000
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 0
-        Config_lvl_gen.MAX_PROB = 4000
-    
-    #EASY
-    elif lvl == 1:
-        Config_lvl_gen.PROB_DECREASE = 750
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 5
-        Config_lvl_gen.MAX_PROB = 4000
-
-    #NORMAL
-    elif lvl == 2:
-        Config_lvl_gen.PROB_DECREASE = 450
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 10
-        Config_lvl_gen.MAX_PROB = 4000
-
-    #HARD
-    elif lvl == 3:
-        Config_lvl_gen.PROB_DECREASE = 250
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 5
-        Config_lvl_gen.MAX_PROB = 8000
-
-    #HARDER
-    elif lvl == 4:
-        Config_lvl_gen.PROB_DECREASE = 20
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 10
-        Config_lvl_gen.MAX_PROB = 4000
-
-    #IMPOSSIBLE
-    elif lvl == 5:
-        Config_lvl_gen.PROB_DECREASE = 0
-        Config_lvl_gen.MIN_STRAIGHT_LINE = 40
-        Config_lvl_gen.MAX_PROB = 100
-        #Bude tam rovná čára, ale hodně zdí
+    prob_decrease, min_straight_line, max_prob = Config_lvl_gen.PROBS[lvl]
 
     probability = {
         Direction.UP.value: 250,
@@ -167,7 +132,7 @@ def generate_level(lvl:int):
     first_direction_1 = first_direction(chosen_start)
 
     #Initialize probabilities
-    init_probs(probability, first_direction_1)
+    init_probs(probability, first_direction_1, max_prob)
 
     x, y = chosen_start
     #Nakreslí start
@@ -188,15 +153,15 @@ def generate_level(lvl:int):
         direction = my_random_direction(probability)
         while not legal_move(*move_to(direction, x, y)):
             direction = my_random_direction(probability)
-            if probability[direction.value] == Config_lvl_gen.MAX_PROB:
-                update_probs(probability, direction, pref_directions_1)
+            if probability[direction.value] == max_prob:
+                update_probs(probability, direction, pref_directions_1, prob_decrease)
             
         x, y = move_to(direction, x, y)
         draw_point(x, y, img)
 
         if direction == last_direction:
-            if counter > Config_lvl_gen.MIN_STRAIGHT_LINE:
-                update_probs(probability, last_direction, pref_directions_1)
+            if counter > min_straight_line:
+                update_probs(probability, last_direction, pref_directions_1, prob_decrease)
             else:
                 counter += 1
         else:
