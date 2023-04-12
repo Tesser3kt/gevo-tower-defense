@@ -28,6 +28,8 @@ class Game:
 class Colors:
     BACKGROUND = (0, 0, 0)
     PATH = (255, 255, 0)
+    START = (0, 255, 0)
+    END = (255, 0, 0)
     WALLS = (255, 0, 0)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
