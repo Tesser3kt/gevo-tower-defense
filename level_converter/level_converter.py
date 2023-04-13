@@ -1,8 +1,6 @@
 from PIL import Image
 from config.settings.general_config import Tile, Colors, Window
 import pygame as pg
-#Convert colorful pixels into 2 renderupdates groups: walls, path
-# Start + end --> rectangles
 
 class GameObject(pg.sprite.Sprite):
     def __init__(self, image: pg.Surface, rect: pg.Rect):
@@ -40,7 +38,7 @@ def convert_level(level_difficulty):
     x = 0
     y = 0
     x_in_image = 0
-    for i, pixel in enumerate(pixels):
+    for pixel in pixels:
         x_in_image += 1
         if x_in_image > Tile.WIDTH:
             x = 1
@@ -49,7 +47,6 @@ def convert_level(level_difficulty):
         else:
             x += Tile.PIXEL_SIZE
         
-        print(x, y)
         if pixel == Colors.WALLS:
             square = create_sprite((x, y), Colors.WALLS)
             walls.add(square)
