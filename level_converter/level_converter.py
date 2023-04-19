@@ -1,69 +1,79 @@
 from PIL import Image
-from config.settings.general_config import Tile, Colors, Window
+from config.settings.general_config import Tile, Colors, Window, Directory
 import pygame as pg
+import os
+import logging
 
-class GameObject(pg.sprite.Sprite):
-    def __init__(self, image: pg.Surface, rect: pg.Rect):
-        pg.sprite.Sprite.__init__(self)
-        self.image = image
-        self.rect = rect
+#screen = pg.display.set_mode((Window.WIDTH, Window.HEIGHT), pg.SCALED)
+#screen.fill((Colors.BACKGROUND))
+
+#Load image
+def load_image(level_difficulty: int):
+    """Load level image"""
+    try:
+        logging.debug(f"Loading level {level_difficulty}")
+        level = Image.open(os.path.join(Directory.ASSETS_DIR, "level_maps", f'level_{level_difficulty}.png'))
+    except FileNotFoundError:
+        logging.error(f"Level {level_difficulty} not found")
+        raise FileNotFoundError
+    return level
 
 
-def convert_level(level_difficulty):
+#Create rect
+def create_rect(position: tuple)-> pg.Rect:
+    """Create a rect from a color and a position"""
+    try:
+        return pg.Rect(position[0], position[1], Tile.PIXEL_SIZE, Tile.PIXEL_SIZE)
+    except pg.error as e:
+        logging.error(f"Level converter -> create_rect(): Cannot create rect from {position}. Error: {e}")
+
+
+def convert_level(level_difficulty: int)-> dict:
     """Convert level image into pygame"""
 
-    #Load image
-    def load_image(level_difficulty):
-        """Load level image"""
-        level = Image.open(f'assets/level_maps/level_{level_difficulty}.png')
-        return level
-    pixels = list(load_image(level_difficulty).getdata())
+    #Get data from level generator's image
+    try:
+        pixels = list(load_image(level_difficulty).getdata())
+    except Exception as e:
+        logging.error(f"Level converter -> convert_level(): Cannot load image. Error: {e}")
+        raise e
 
-    #Create sprite
-    def create_sprite(position, color)->GameObject:
-        """Create a sprite from a color and a position"""
-        image = pg.Surface((Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))
-        image.fill(color)
-        image = image.convert()
-        rect = pg.Rect(position[0], position[1], Tile.PIXEL_SIZE, Tile.PIXEL_SIZE)
-        square = GameObject(image, rect)
-        return square
+    path_rect = []
+    walls_rect = []
+    start_end_rect = []
+    free_tile_rect = []
 
-    walls = pg.sprite.RenderUpdates()
-    path = pg.sprite.RenderUpdates()
-    free_tile = pg.sprite.RenderUpdates()
-    start_end = pg.sprite.RenderUpdates()
+    tiles = {
+        "path": path_rect,
+        "walls": walls_rect,
+        "start_end": start_end_rect,
+        "free_tile": free_tile_rect
+    }
 
-    # x, y in pygame
-    x = 0
-    y = 0
-    x_in_image = 0
-    for pixel in pixels:
-        x_in_image += 1
-        if x_in_image > Tile.WIDTH:
-            x = 1
-            y += Tile.PIXEL_SIZE
-            x_in_image = 1 #Musí být 1, jinak to je o 1 pixel posunuté každé y
-        else:
-            x += Tile.PIXEL_SIZE
+    #Process data from image
+    for i, pixel in enumerate(pixels):
+        x = i%Tile.WIDTH*Tile.PIXEL_SIZE
+        y = i//Tile.WIDTH*Tile.PIXEL_SIZE
+
         
+        #Detect colors
         if pixel == Colors.WALLS:
-            square = create_sprite((x, y), Colors.WALLS)
-            walls.add(square)
+            square = create_rect((x, y))
+            walls_rect.append(square)
         elif pixel == Colors.PATH:
-            square = create_sprite((x, y), Colors.PATH)
-            path.add(square)
+            square = create_rect((x, y))
+            path_rect.append(square)
         elif pixel == Colors.START:
-            square = create_sprite((x, y), Colors.START)
-            start_end.add(square)
+            square = create_rect((x, y))
+            start_end_rect.append(square)
         elif pixel == Colors.END:
-            square = create_sprite((x, y), Colors.END)
-            start_end.add(square)
+            square = create_rect((x, y))
+            start_end_rect.append(square)
         elif pixel == Colors.BACKGROUND:
-            square = create_sprite((x, y), Colors.BACKGROUND)
-            free_tile.add(square)
+            square = create_rect((x, y))
+            free_tile_rect.append(square)
         else:
-            print(f"Level converter: Unknown color: {pixel}")
+            logging.error(f"Level converter: Unknown color: {pixel}")
 
 
 
@@ -75,14 +85,19 @@ def convert_level(level_difficulty):
    #
    #screen = pg.display.set_mode((Window.WIDTH, Window.HEIGHT), pg.SCALED)
    #screen.fill((Colors.BACKGROUND))
-   # while True:
-   #     for event in pg.event.get():
-   #         if event.type == pg.QUIT:
-   #             pg.quit()
-   #             quit()
+   #print((len(tiles["free_tile"])+ len(tiles["path"])+ len(tiles["start_end"])+ len(tiles["walls"])))
+   #while True:
+   #    for event in pg.event.get():
+   #        if event.type == pg.QUIT:
+   #            pg.quit()
+   #            quit()
+
    #     
-   #     walls.draw(screen)
-   #     path.draw(screen)
-   #     free_tile.draw(screen)
-   #     start_end.draw(screen)
-   #     pg.display.update()
+   #    for j, tile in enumerate(tiles.values()):
+   #        for i, rect in enumerate(tile):
+   #            pg.draw.rect(screen, ((j+1)*10, (j+1)*50, (j+1)*50) , rect)
+   #            #print("yes") if rect.x == 0 and rect.y == 0 else None
+
+   #    pg.display.update()
+
+    return tiles
