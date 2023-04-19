@@ -64,6 +64,14 @@ def draw_point(x:int, y:int, img:Image)->None:
     """Create 1 point on a specific pixel on the image"""
     img.putpixel((x, y), Colors.PATH)
 
+def draw_start(x:int, y:int, img:Image)->None:
+    """Draw start point"""
+    img.putpixel((x, y), Colors.START)
+
+def draw_end(x:int, y:int, img:Image)->None:
+    """Create 1 point on a specific pixel on the image"""
+    img.putpixel((x, y), Colors.END)
+
 def my_random_direction(probability:dict) -> Direction:
     """Return a random direction based on probabilities"""
     vectors_probability = []
@@ -135,8 +143,6 @@ def generate_level(lvl:int):
     init_probs(probability, first_direction_1, max_prob)
 
     x, y = chosen_start
-    #Nakreslí start
-    draw_point(*chosen_start, img)
 
     #Posunese o pixel dál
     x, y = x+first_direction_1.value[0], y+first_direction_1.value[1]
@@ -165,9 +171,16 @@ def generate_level(lvl:int):
             else:
                 counter += 1
         else:
-            init_probs(probability, direction)
+            init_probs(probability, direction, max_prob)
             last_direction = direction
             counter = 0
+
+    #Nakreslí konec
+    draw_end(x, y, img)
+
+    x, y = chosen_start
+    #Nakreslí start
+    draw_start(*chosen_start, img)
 
     # Save the image
     img.save(f"assets/level_maps/level_{lvl}.png")
