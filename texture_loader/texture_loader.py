@@ -1,14 +1,10 @@
 """ texture loader module. """
-#from config.general_config import *
 import logging
 from pygame.image import load
 import pygame as pg
 import os
+from config.setting.general_config import *
 logging.debug("Everything imported succesfully. ")
-# delete
-BASE_DIR = r"C:\Users\HP\repa\gevo-tower-defense-1"
-ASSETS_DIR = "assets"
-# delete end
 class TextureLoader:
     """ Texture loader class. """
     def __init__(self):
@@ -73,7 +69,3 @@ class TextureLoader:
         logging.info("Function 'load_all_textures' finished. ")
         return texture_dict
         
-# delete
-x = TextureLoader()
-print(x.load_all_textures())
-#delete end
