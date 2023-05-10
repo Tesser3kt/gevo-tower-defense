@@ -3,15 +3,11 @@ import logging
 from pygame.image import load
 import pygame as pg
 import os
-from config.setting.general_config import *
+from config.setting.general_config import BASE_DIR, ASSETS_DIR
 logging.debug("Everything imported succesfully. ")
 class TextureLoader:
     """ Texture loader class. """
     def __init__(self):
-        #delete
-        pg.init()
-        pg.display.set_mode((800, 800),pg.SCALED)
-        #delete end
         logging.debug("TextureLoader class object initializated succesfully. ")
 
     def load_all_textures(self) -> dict:
