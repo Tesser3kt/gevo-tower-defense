@@ -7,8 +7,8 @@ class Window:
 
 class Tile:
     PIXEL_SIZE = 16
-    HEIGHT = 50
-    WIDTH = 60
+    HEIGHT = 50 #How many tiles are in height
+    WIDTH = 60 #How many tiles are in width
     # 60T*50T, 1T = 16px
 
 class Directory:
@@ -28,6 +28,8 @@ class Game:
 class Colors:
     BACKGROUND = (0, 0, 0)
     PATH = (255, 255, 0)
+    START = (0, 255, 0)
+    END = (255, 0, 0)
     WALLS = (255, 0, 0)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
