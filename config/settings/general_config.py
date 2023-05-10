@@ -24,6 +24,8 @@ class Economy:
     
 class Game:
     FPS = 60
+    START_LEVEL = 0
+    START_WAVE = 0
 
 class Colors:
     BACKGROUND = (0, 0, 0)

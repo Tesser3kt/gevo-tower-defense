@@ -40,13 +40,15 @@ def convert_level(level_difficulty: int)-> dict:
 
     path_rect = []
     walls_rect = []
-    start_end_rect = []
+    start_rect = []
+    end_rect = []
     free_tile_rect = []
 
     tiles = {
         "path": path_rect,
         "walls": walls_rect,
-        "start_end": start_end_rect,
+        "start": start_rect,
+        "end": end_rect,
         "free_tile": free_tile_rect
     }
 
@@ -65,10 +67,10 @@ def convert_level(level_difficulty: int)-> dict:
             path_rect.append(square)
         elif pixel == Colors.START:
             square = create_rect((x, y))
-            start_end_rect.append(square)
+            start_rect.append(square)
         elif pixel == Colors.END:
             square = create_rect((x, y))
-            start_end_rect.append(square)
+            end_rect.append(square)
         elif pixel == Colors.BACKGROUND:
             square = create_rect((x, y))
             free_tile_rect.append(square)
