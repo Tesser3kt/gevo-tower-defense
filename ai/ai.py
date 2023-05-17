@@ -9,13 +9,12 @@
 #   jak dlouho to poletí na současnou polohu
 #   posunout enemaka o ten čas vrátit jeho směr od věže
 
-
-from re import I
-
-
+from random import randint
 class AI:
     def __init__(self,level:dict,) -> None:
         self.level=level
+        self.paths = []
+        self.subsequent={}
 
 
     def najdi_sousedy(self,vertex:tuple[int],path,visited:list[tuple[int]]=[])->list[tuple[int]]:
@@ -26,13 +25,13 @@ class AI:
             distance = (abs(vertex[0]-node[0]),abs(vertex[1]-node[1]))
             if distance[0]==1 or distance[1]==1:
                 sousedi.append(node)
+        return sousedi
 
 
-    def find_paths(self,start:tuple[int],visited:list[tuple[int]]=[],cesty:list=[])->list[list[tuple[int]]]:
+    def find_paths(self,start:tuple[int],visited:list[tuple[int]]=[])->None:
         vertex=start
-        cesty=cesty
         heap = [vertex]
-        while len(heap):
+        while True:
             node=heap.pop()
             visited.append(node)
             if node == self.level["end"][0]:break
@@ -40,8 +39,17 @@ class AI:
             sousedi = self.najdi_sousedy(node,self.level["path"],visited)
             
             if len(sousedi)>1:
-                for i in range(len(sousedi)-1):
-                    self.find_paths(sousedi[i],visited,cesty)
-            
-            heap.append(sousedi[len(sousedi)-1])
-        cesty.append(visited)
+                for i in range(len(sousedi)):
+                    self.find_paths(sousedi[i],[node])
+            else:
+                visited.append(sousedi[0])
+                heap.append(sousedi[0])
+
+        self.paths.append(visited)
+
+    def subsequent_paths(self)->None:
+        for path1 in enumerate(self.paths):
+            self.subsequent[path1[len(path1)]]=[]
+            for i,path2 in enumerate(self.paths):
+                if path1[len(path1)]==path2[0]:
+                    self.subsequent[path1[len(path1)]].append(i)
