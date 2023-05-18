@@ -18,8 +18,8 @@ class AI:
         self.subsequent={}
         self.enemy_paths=[]
 
-
     def najdi_sousedy(self,vertex:tuple[int],path,visited:list[tuple[int]]=[])->list[tuple[int]]:
+        """Returns not visited neighbours for a vertex"""
         path=self.level["path"]
         sousedi=[]
         for node in path:
@@ -29,8 +29,8 @@ class AI:
                 sousedi.append(node)
         return sousedi
 
-
     def find_paths(self,start:tuple[int],visited:list[tuple[int]]=[])->None:
+        """Arranges all the paths between different rozcestí"""
         vertex=start
         heap = [vertex]
         while True:
@@ -50,6 +50,7 @@ class AI:
         self.available_paths.append(visited)
 
     def subsequent_paths(self)->None:
+        """For every rozcesti writes the indexes for the paths that come after it"""
         for path1 in enumerate(self.available_paths):
             self.subsequent[path1[len(path1)]]=[]
             for i,path2 in enumerate(self.available_paths):
@@ -62,17 +63,22 @@ class AI:
             self.subsequent[rozcesti]=sorted(self.subsequent[rozcesti], key=lambda x: len(self.available_paths[x]))
     
     def assign_path_to_enemies(self)->None:
+        """For every enemy in game it chooses the correct path"""
         for i,enemy in enumerate(self.enemies):
             preference = "long" #this will be assigned depending on the enemytype and their preferency
             path = [x for x in self.available_paths[0]]
             rozcesti = path[len(path)]
             while rozcesti!=self.level["end"]:
-                if preference=="long":
-                    path.append([x for x in self.available_paths[self.subsequent[rozcesti][len(self.subsequent[rozcesti])]]])
+                if preference=="long": #chooses the last element of the rozcesti->longest path
+                    subpath=self.available_paths[self.subsequent[rozcesti][len(self.subsequent[rozcesti])]]
+                    path.append([x for x in subpath])
                     rozcesti = path[len(path)]
-                elif preference=="short":
-                    path.append([x for x in self.available_paths[self.subsequent[rozcesti][0]]])
+                elif preference=="short": #chooses the first->shortest path
+                    subpath = self.available_paths[self.subsequent[rozcesti][0]]
+                    path.append([x for x in subpath])
                     rozcesti = path[len(path)]
-                elif preference=="middle":
-                    path.append([x for x in self.available_paths[self.subsequent[rozcesti][len(self.subsequent[rozcesti])//2]]])
+                elif preference=="middle": #chooses something aproximetly in the middle
+                    subpath = self.available_paths[self.subsequent[rozcesti][len(self.subsequent[rozcesti])//2]]
+                    path.append([x for x in subpath])
                     rozcesti = path[len(path)]
+            self.enemy_paths[i]=path
