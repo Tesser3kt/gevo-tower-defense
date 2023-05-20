@@ -82,3 +82,6 @@ class AI:
                     path.append([x for x in subpath])
                     rozcesti = path[len(path)]
             self.enemy_paths[i]=path
+    
+    def get_next_step(self,enemy_index:int)->tuple:
+        return self.enemy_paths[enemy_index].pop(0)
