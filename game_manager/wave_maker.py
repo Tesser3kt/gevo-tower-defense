@@ -1,8 +1,5 @@
-""" Program that creates waves of enemies for the game."""
-from config.settings.general_config import *
-from game_manager.game_manager import GameManager
-from game_objects.enemies.enemy_object import EnemyObject
-from config.settings.enemies import *
+""" Program that creates waves of enemies for the game. Bing chilling"""
+from config.settings.general_config import Spawn_probs, Special_waves, Wave_function
 
 from random import choices
 
@@ -28,7 +25,7 @@ def create_wave(wave_function:Wave_function , wave:int) -> list:
         wave_difficulty = Spawn_probs.hard
     elif wave < 50:
         wave_difficulty = Spawn_probs.harder
-    elif wave < 60:
+    else:
         wave_difficulty = Spawn_probs.impossible
     
     for i in range(number_of_enemies):
@@ -37,6 +34,3 @@ def create_wave(wave_function:Wave_function , wave:int) -> list:
                 enemies.append(enemy_type)
 
     return choices(enemies, k=number_of_enemies)
-
-
-    
