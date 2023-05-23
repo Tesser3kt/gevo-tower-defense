@@ -46,45 +46,86 @@ class Difficulty:
     IMPOSSIBLE = 5
 #   To by mohlo být asi nějaké menu?
 
-# Asi to může být random, ale tak prozatím jsem to dal sem
-class Noob_spawn_probs:
-    CASUAL = 1
-    SPEEDER = 0
-    CAMO = 0
-    BOSS = 0
-    BRUISER = 0
+class Spawn_probs:
+    only_casual = {
+        "casual": 1,
+        "speeder" : 0,
+        "camo" : 0,
+        "boss" : 0,
+        "bruiser" : 0}
 
-class Easy_spawn_probs:
-    CASUAL = 0.5
-    SPEEDER = 0.5
-    CAMO = 0
-    BOSS = 0
-    BRUISER = 0
-    
-class Normal_spawn_probs:
-    CASUAL = 0.25
-    SPEEDER = 0.25
-    CAMO = 0.2
-    BOSS = 0.1
-    BRUISER = 0.2
+    casual_speeder = {
+        "casual" : 0.5,
+        "speeder" : 0.5,
+        "camo" : 0,
+        "boss" : 0,
+        "bruiser" : 0
+    }
+        
+    normal = {
+        "casual" : 0.25,
+        "speeder" : 0.25,
+        "camo" : 0.2,
+        "boss" : 0.1,
+        "bruiser" : 0.2
+    }
 
-class Hard_spawn_probs:
-    CASUAL = 0.2
-    SPEEDER = 0.2
-    CAMO = 0.2
-    BOSS = 0.1
-    BRUISER = 0.3
+    hard = {
+        "casual" : 0.2,
+        "speeder" : 0.2,
+        "camo" : 0.2,
+        "boss" : 0.1,
+        "bruiser" : 0.3
+    }
 
-class Harder_spawn_probs:
-    CASUAL = 0.1
-    SPEEDER = 0.1
-    CAMO = 0.1
-    BOSS = 0.1
-    BRUISER = 0.6
+    harder = {
+        "casual" : 0.1,
+        "speeder" : 0.1,
+        "camo" : 0.1,
+        "boss" : 0.1,
+        "bruiser" : 0.6
+    }
 
-class Impossible_spawn_probs:
-    CASUAL = 0.1
-    SPEEDER = 0.1
-    CAMO = 0.2
-    BOSS = 0.2
-    BRUISER = 0.4
+    impossible = {
+        "casual" : 0.,
+        "speeder" : 0.1,
+        "camo" : 0.2,
+        "boss" : 0.3,
+        "bruiser" : 0.4
+    }
+
+    only_boss = {
+        "casual": 0,
+        "speeder" : 0,
+        "camo" : 0,
+        "boss" : 1,
+        "bruiser" : 0
+    }
+
+    only_camo = {
+        "casual": 0,
+        "speeder" : 0,
+        "camo" : 1,
+        "boss" : 0,
+        "bruiser" : 0
+    }
+
+class Special_waves:
+    boss_wave = [25, 35, 50, 60]
+    camo_wave = [15, 30]
+    speedrun_wave = [13, 26, 39, 52, 65]
+    hard_wave = [12, 22, 32, 42]
+
+class Wave_function:
+    def noob_wave(wave:int) -> int:
+        return wave+e**(-0.2*wave+2)*sin(10*wave)+5
+    def easy_wave(wave:int) -> int:
+        return wave*69
+    def normal_wave(wave:int) -> int:
+        return wave*69
+    def hard_wave(wave:int) -> int:
+        return wave*69
+    def harder_wave(wave:int) -> int:
+        return wave*69
+    def impossible_wave(wave:int) -> int:
+        return wave*420
