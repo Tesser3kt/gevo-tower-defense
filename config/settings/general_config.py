@@ -117,15 +117,17 @@ class Special_waves:
     hard_wave = [12, 22, 32, 42]
 
 class Wave_function:
-    def noob_wave(wave:int) -> int:
+    def noob_wave(wave:int) -> float:
+        return wave+e**((-0.2**0.5)*wave+2)*sin(10*wave)+5
+    def easy_wave(wave:int) -> float:
         return wave+e**(-0.2*wave+2)*sin(10*wave)+5
-    def easy_wave(wave:int) -> int:
-        return wave*69
-    def normal_wave(wave:int) -> int:
-        return wave*69
-    def hard_wave(wave:int) -> int:
-        return wave*69
-    def harder_wave(wave:int) -> int:
-        return wave*69
-    def impossible_wave(wave:int) -> int:
-        return wave*420
+    def normal_wave(wave:int) -> float:
+        return wave+e**(-0.1*wave+2)*sin((10**0.5)*wave)+6
+    def hard_wave(wave:int) -> float:
+        return wave**0.8*(e**(sin(wave)))
+    def harder_wave(wave:int) -> float:
+        return wave**1.5+5*(e**(sin(5*wave)))
+    def impossible_wave(wave:int) -> float:
+        return wave**2*(e**(sin(wave)))
+    
+    
