@@ -28,9 +28,10 @@ def create_wave(wave_function:Wave_function , wave:int) -> list:
     else:
         wave_difficulty = Spawn_probs.impossible
     
-    for i in range(number_of_enemies):
+    for i in range(number_of_enemies): # je potřeba tenhle loop? 
         for enemy_type in wave_difficulty:
             for j in range(int(number_of_enemies*wave_difficulty[enemy_type])):
                 enemies.append(enemy_type)
 
+    print("Enemies: ", enemies, 2*"\n")
     return choices(enemies, k=number_of_enemies)
