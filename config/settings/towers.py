@@ -2,8 +2,10 @@
 from config.enums.towers_ability import Ability
 from config.enums.towers_ammo import Ammo
 
+
 class Basic:
     ABILITY = None
+    TYPE = "projectile"
 
     RANGE = 2
     COST = 200
@@ -20,6 +22,7 @@ class Basic:
 
 class Eyes:
     ABILITY = Ability.ATTACK_ALL
+    TYPE = "projectile"
 
     RANGE = 3
     COST = 325
@@ -36,6 +39,7 @@ class Eyes:
 
 class Cannon:
     ABILITY = Ability.SPLASH_DAMAGE
+    TYPE = "splash"
 
     RANGE = 6
     COST = 500
@@ -52,6 +56,7 @@ class Cannon:
 
 class Yeti:
     ABILITY = Ability.FREEZE_ENEMIES
+    TYPE = "splash"
 
     RANGE = 3
     COST = 750
@@ -71,6 +76,7 @@ class Yeti:
 
 class Laser:
     ABILITY = Ability.DESTROYS_CAMOUFLAGE
+    TYPE = "projectile"
 
     RANGE = 5
     COST = 1000
@@ -84,3 +90,11 @@ class Laser:
     AMMO_TYPE = Ammo.LASER
 
     IMAGE = "laser"
+
+tower_dict = {
+    "basic": Basic,
+    "eyes": Eyes,
+    "cannon": Cannon,
+    "yeti": Yeti,
+    "laser": Laser
+}
