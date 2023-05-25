@@ -8,11 +8,22 @@ from pygame import locals
 import logging
 
 # project imports
+
+# config
 from config.settings.enemies import *
+from config.settings.towers import *
 from config.settings.general_config import Economy, Game, Wave_function
+
+# objects
 from game_objects.enemies.enemy_object import EnemyObject
-from grafics_manager.grafics_manager import GraficsManager
-from game_manager import wave_maker
+from game_objects.towers.tower_object import TowerObject
+from game_objects.towers.tower_type import TowerType
+from game_objects.towers.projectile_tower import ProjectileTower
+from game_objects.towers.splash_tower import SplashTower
+
+# other
+from grafics_manager.grafics_manager import GraphicsManager
+from game_manager import wave_maker, spawn_delay
 from level_converter.level_converter import convert_level
 
 class GameManager:
@@ -22,10 +33,10 @@ class GameManager:
 
         self.projectiles = RenderUpdates()
         self.towers = RenderUpdates()
-        self.enemies = RenderUpdates()
+        self.living_enemies = RenderUpdates()
+        self.not_spawned_enemies = RenderUpdates()
         self.effects = RenderUpdates()
 
-        self.actual_wave = RenderUpdates()
 
         self.moving_objects = RenderUpdates()
         self.static_objects = RenderUpdates()
@@ -42,6 +53,14 @@ class GameManager:
 
         self.running = True
         self.pause = False
+        self.wave_running = False
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#-------------------------------------- HANDLE ENEMIES ------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+
 
     def get_start(self, level:int) -> tuple:
         """ Get start position from level"""
@@ -82,6 +101,103 @@ class GameManager:
         # EnemyObjects in a list
         return enemy_objects
     
+    def add_enemies_to_group(self, enemies: list(EnemyObject)) -> None:
+        """ Add enemies in list to not_spawned_enemies group. Called after wave_loader"""
+        logging.debug(f"Adding {len(enemies)} enemies to not_spawned_enemies group")
+        for enemy in enemies:
+            self.not_spawned_enemies.add(enemy)
+    
+    
+    def spawn_enemy(self, frames:int, spawn_delay:int) -> None:
+        """ Transfer enemy from not_spawned to living and moving groups in intervals. Called every frame"""
+        if len(self.not_spawned_enemies) == 0:
+            return None
+        
+        if frames % spawn_delay == 0:
+            enemy = self.not_spawned_enemies[0]
+            self.not_spawned_enemies.remove(self.not_spawned_enemies[0])
+
+            self.living_enemies.add(enemy)
+            self.moving_objects.add(enemy)
+
+            logging.debug(f"Spawned enemy {enemy} with spawn delay {spawn_delay}")
+            # Enemy is in living group and moving objects group --> One group will be drawn every frame
+
+
+    def move_enemy(self, enemy: EnemyObject, position:tuple) -> None:
+        """ Move enemy to position"""
+
+        logging.debug(f"Moving enemy {enemy} to position {position}")
+        enemy.x = position[0]
+        enemy.y = position[1]
+        #TODO animation index change?
+           
+
+    def handle_enemy_hp(self) -> None:
+        """ Check if enemy is dead and kill it"""
+
+        for enemy in self.living_enemies:
+            if enemy.hp <= 0:
+                enemy.kill()
+        
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------ HANDLE TOWERS ---------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+
+    def buy_tower(self, tower:TowerType, position:tuple) -> TowerObject:
+        """ Buy tower if player has enough coins and create tower object and add it in static objects + towers group"""
+        if self.coins >= tower_dict[tower].PRICE:
+            self.coins -= tower_dict[tower].PRICE
+            if tower_dict[tower].TYPE == "projectile":
+                x,y = position
+                width = Tile.PIXEL_SIZE
+                height = Tile.PIXEL_SIZE
+                image = ... # TODO: image
+                animation = ... # TODO: animation
+                animation_index = ... # TODO: animation index
+                damage = tower_dict[tower].DAMAGE
+                reload_time = tower_dict[tower].RELOAD_TIME
+                tower_type = tower
+                projectile_animation = ... # TODO: animation
+                projectile_animation_index = ... # TODO: animation index
+
+                tower_object = ProjectileTower()#TODO počkat, než Jáchym mi dá pořadí argumentů
+
+                self.static_objects.add(tower_object)
+                self.towers.add(tower_object)
+            elif tower_dict[tower].TYPE == "splash":
+                x,y = position
+                width = Tile.PIXEL_SIZE
+                height = Tile.PIXEL_SIZE
+                image = ... # TODO: image
+                animation = ... # TODO: animation
+                animation_index = ... # TODO: animation index
+                damage = tower_dict[tower].DAMAGE
+                reload_time = tower_dict[tower].RELOAD_TIME
+                tower_type = tower
+                projectile_animation = ... # TODO: animation
+                projectile_animation_index = ... # TODO: animation index
+
+                tower_object = SplashTower()#TODO počkat, než Jáchym mi dá pořadí argumentů
+
+                self.static_objects.add(tower_object)
+                self.towers.add(tower_object)
+            else:
+                logging.error(f"Cannot buy tower {tower} because it has unknown type")
+            return True
+        else:
+            return False
+        
+
+        
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------ IMPORTANT ---------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
 
     def handle_input(self):
         """ Handle input from user"""
@@ -93,52 +209,16 @@ class GameManager:
                 self.pause = not self.pause
 
 
-    def spawn_enemy(self,wave: list(EnemyObject), frames:int, spawn_delay:int) -> None:
-        """ Add enemies from list to enemies group and spawn them in intervals"""
-
-        if len(wave) == 0:
-            return None
-        
-        for enemy in wave:
-            self.enemies.add(enemy)
-            self.moving_objects.add(enemy)
-            self.actual_wave.add(enemy)
-            #isn't actual_wave the same as enemies?
-
-        if frames % spawn_delay == 0:
-            enemy = self.actual_wave[0]
-            #TODO: enemy.spawn()
-            self.actual_wave.remove(enemy)
-        
-
-    def move_enemy(self, enemy: EnemyObject, position:tuple) -> None:
-        """ Move enemy to position"""
-
-        logging.debug(f"Moving enemy {enemy} to position {position}")
-        enemy.x = position[0]
-        enemy.y = position[1]
-        #animation index change?
-           
-
-    def handle_enemy_hp(self) -> None:
-        """ Check if enemy is dead and kill it"""
-
-        for enemy in self.enemies:
-            if enemy.hp <= 0:
-                enemy.kill()
-
-
     def update(self, frames) -> None:
-        """ Update game state"""
+        """ Update game state every frame"""
 
-        wave = self.wave_loader(self.wave)
-        self.spawn_enemy(wave, frames, spawn_delay)
+        if not self.wave_running:
+            # Load wave
+            wave = self.wave_loader(self.wave)
+            self.add_enemies_to_group(wave)        
+        # Spawn enemies in intervals
+        self.spawn_enemy(frames, spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
 
-        #TODO: projectiles
-
-        #TODO: tower rotation
-
-        #TODO: idk
 
         self.handle_enemy_hp()
     
