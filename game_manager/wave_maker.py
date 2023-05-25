@@ -33,5 +33,5 @@ def create_wave(wave_function:Wave_function , wave:int) -> list:
             for j in range(int(number_of_enemies*wave_difficulty[enemy_type])):
                 enemies.append(enemy_type)
 
-    print("Enemies: ", enemies, 2*"\n")
+    #print("Enemies: ", enemies, 2*"\n")
     return choices(enemies, k=number_of_enemies)
