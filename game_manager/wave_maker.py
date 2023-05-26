@@ -1,11 +1,10 @@
 """ Program that creates waves of enemies for the game. Bing chilling"""
-from config.settings.general_config import Spawn_probs, Special_waves, Wave_function
+from config.settings.general_config import Spawn_probs, Special_waves
 
 from random import choices
 
-def create_wave(wave_function:Wave_function , wave:int) -> list:
+def create_wave(number_of_enemies:int , wave:int) -> list:
     """ Create a wave of enemies"""
-    number_of_enemies = int(wave_function(wave))
     enemies = []
     if wave in Special_waves.boss_wave:
         wave_difficulty = Spawn_probs.only_boss
@@ -28,10 +27,9 @@ def create_wave(wave_function:Wave_function , wave:int) -> list:
     else:
         wave_difficulty = Spawn_probs.impossible
     
-    for i in range(number_of_enemies): # je potřeba tenhle loop? 
+    #for i in range(number_of_enemies): je potřeba tenhle loop? asi ne, ale nechám ho tu pro jistotu
         for enemy_type in wave_difficulty:
             for j in range(int(number_of_enemies*wave_difficulty[enemy_type])):
                 enemies.append(enemy_type)
 
-    #print("Enemies: ", enemies, 2*"\n")
     return choices(enemies, k=number_of_enemies)

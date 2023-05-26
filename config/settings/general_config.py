@@ -44,7 +44,7 @@ class Difficulty:
     HARD = 3
     HARDER = 4
     IMPOSSIBLE = 5
-#   To by mohlo být asi nějaké menu?
+
 
 class Spawn_probs:
     only_casual = {
@@ -116,18 +116,36 @@ class Special_waves:
     speedrun_wave = [13, 26, 39, 52, 65]
     hard_wave = [12, 22, 32, 42]
 
-class Wave_function:
-    def noob_wave(wave:int) -> float:
-        return wave+e**((-0.2**0.5)*wave+2)*sin(10*wave)+5
-    def easy_wave(wave:int) -> float:
-        return wave+e**(-0.2*wave+2)*sin(10*wave)+5
-    def normal_wave(wave:int) -> float:
-        return wave+e**(-0.1*wave+2)*sin((10**0.5)*wave)+6
-    def hard_wave(wave:int) -> float:
-        return wave**0.8*(e**(sin(wave)))
-    def harder_wave(wave:int) -> float:
-        return wave**1.5+5*(e**(sin(5*wave)))
-    def impossible_wave(wave:int) -> float:
-        return wave**2*(e**(sin(wave)))
-    
-    
+class Wave_difficulty:
+    class Noob_wave:
+        def noob_wave(wave:int) -> float:
+            return wave+e**((-0.2**0.5)*wave+2)*sin(10*wave)+5
+
+    class Easy_wave:    
+        def easy_wave(wave:int) -> float:
+            return wave+e**(-0.2*wave+2)*sin(10*wave)+5
+
+    class Normal_wave:
+        def normal_wave(wave:int) -> float:
+            return wave+e**(-0.1*wave+2)*sin((10**0.5)*wave)+6
+        
+    class Hard_wave:
+        def hard_wave(wave:int) -> float:
+            return wave**0.8*(e**(sin(wave)))
+        
+    class Harder_wave:
+        def harder_wave(wave:int) -> float:
+            return wave**1.5+5*(e**(sin(5*wave)))
+        
+    class Impossible_wave:
+        def impossible_wave(wave:int) -> float:
+            return wave**2*(e**(sin(wave)))
+        
+    waves_dict = {
+        Difficulty.NOOB : Noob_wave.noob_wave,
+        Difficulty.EASY : Easy_wave.easy_wave,
+        Difficulty.NORMAL : Normal_wave.normal_wave,
+        Difficulty.HARD : Hard_wave.hard_wave,
+        Difficulty.HARDER : Harder_wave.harder_wave,
+        Difficulty.IMPOSSIBLE : Impossible_wave.impossible_wave
+    }

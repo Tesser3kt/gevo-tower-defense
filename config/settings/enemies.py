@@ -72,10 +72,8 @@ class Bruiser:
 
     IMAGE = "bruiser"
 
-enemy_dict = {
-    "casual": Casual,
-    "camo": Camo,
-    "speeder": Speeder,
-    "boss": Boss,
-    "bruiser": Bruiser
-}
+enemy_types = [Casual, Camo, Speeder, Boss, Bruiser]
+enemy_dict = {}
+
+for enemy_type in enemy_types:
+    enemy_dict[enemy_type.__name__.lower()] = enemy_type

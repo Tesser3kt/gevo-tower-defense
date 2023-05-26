@@ -7,12 +7,13 @@ from pygame import locals
 # python imports
 import logging
 
+
 # project imports
 
 # config
 from config.settings.enemies import *
 from config.settings.towers import *
-from config.settings.general_config import Economy, Game, Wave_function
+from config.settings.general_config import Economy, Game, Difficulty, Wave_difficulty
 
 # objects
 from game_objects.enemies.enemy_object import EnemyObject
@@ -22,7 +23,7 @@ from game_objects.towers.projectile_tower import ProjectileTower
 from game_objects.towers.splash_tower import SplashTower
 
 # other
-from grafics_manager.grafics_manager import GraphicsManager
+from graphics_manager.graphics_manager import GraphicsManager
 from game_manager import wave_maker, spawn_delay
 from level_converter.level_converter import convert_level
 
@@ -67,14 +68,17 @@ class GameManager:
 
         logging.debug(f"Getting start position from level {level}")
         return convert_level(level)["start"][0].x, convert_level(level)["start"][0].y
-    
 
-    def wave_loader(self, wave: int) -> list[EnemyObject]:
 
+    def wave_loader(self, level:Difficulty ,wave: int) -> list[EnemyObject]:
         """ Load wave from config and return a list of EnemyObjects. The wave is randomized"""
         logging.debug(f"Loading wave {wave}")
-        enemies = wave_maker.create_wave(wave)
+
+        wave_function = Wave_difficulty.waves_dict[level]
+        number_of_enemies = int(wave_function(wave))    
+        enemies = wave_maker.create_wave(number_of_enemies, wave)
         #name of enemies in a list
+
         enemy_objects = []
         x,y = self.get_start(self.level)
 
@@ -96,7 +100,7 @@ class GameManager:
             except:
                 logging.error(f"Cannot create enemy {enemy}")
 
-        logging.debug(f"Loaded wave {wave} with {len(enemy_objects)} enemies")
+        logging.debug(f"Loaded wave {wave} with {number_of_enemies} enemies")
 
         # EnemyObjects in a list
         return enemy_objects
