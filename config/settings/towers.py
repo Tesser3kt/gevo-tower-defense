@@ -91,10 +91,8 @@ class Laser:
 
     IMAGE = "laser"
 
-tower_dict = {
-    "basic": Basic,
-    "eyes": Eyes,
-    "cannon": Cannon,
-    "yeti": Yeti,
-    "laser": Laser
-}
+tower_types  = [Basic, Eyes, Cannon, Yeti, Laser]
+tower_dict = {}
+
+for tower in tower_types:
+    tower_dict[tower.__name__.lower()] = tower

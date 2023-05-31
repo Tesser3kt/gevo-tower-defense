@@ -35,7 +35,7 @@ class GameManager:
         self.projectiles = RenderUpdates()
         self.towers = RenderUpdates()
         self.living_enemies = RenderUpdates()
-        self.not_spawned_enemies = RenderUpdates()
+        self.not_spawned_enemies = []
         self.effects = RenderUpdates()
 
 
@@ -48,6 +48,8 @@ class GameManager:
         self.lives:int = Economy.STARTING_LIVES
         self.level:int = Game.START_LEVEL
         self.wave:int = Game.START_WAVE
+
+        self.converted_level = []
 
 
         self.clock = Clock()
@@ -62,12 +64,14 @@ class GameManager:
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 
+    def initialize(self):
+        self.converted_level = convert_level(self.level)
 
-    def get_start(self, level:int) -> tuple:
+
+    def get_start(self) -> tuple:
         """ Get start position from level"""
-
-        logging.debug(f"Getting start position from level {level}")
-        return convert_level(level)["start"][0].x, convert_level(level)["start"][0].y
+        logging.debug(f"Getting start position from level {self.level}")
+        return self.converted_level["start"][0].x, self.converted_level["start"][0].y
 
 
     def wave_loader(self, level:Difficulty ,wave: int) -> list[EnemyObject]:
@@ -82,44 +86,39 @@ class GameManager:
         enemy_objects = []
         x,y = self.get_start(self.level)
 
-        for enemy in enemies:
+        for enemy_name in enemies:
             try:
-                hp = enemy_dict[enemy].HEALTH
-                size = enemy_dict[enemy].SIZE
+                hp = enemy_dict[enemy_name].HEALTH
+                size = enemy_dict[enemy_name].SIZE
                 image = ... #TODO: image
-                speed = enemy_dict[enemy].SPEED
+                speed = enemy_dict[enemy_name].SPEED
                 direction = ... #TODO: direction
                 animation = ... #TODO: animation
                 animation_index = ... #TODO: animation_index
-                detectable = enemy_dict[enemy].DETECTABLE
-                lvl = enemy_dict[enemy].START_LEVEL
-            except:
-                logging.error(f"Cannot load informations about enemy: {enemy}")
-            try :
-                enemy_objects.append(EnemyObject(hp, x, y, size, size, image, speed, direction, animation, animation_index, detectable, lvl))
-            except:
-                logging.error(f"Cannot create enemy {enemy}")
+                detectable = enemy_dict[enemy_name].DETECTABLE
+                lvl = enemy_dict[enemy_name].START_LEVEL
+            except KeyError:
+                logging.debug(f"Enemy {enemy_name} is not in enemy_dict" + KeyError)
+            
+            enemy = EnemyObject(hp, x, y, size, size, image, speed, direction, animation, animation_index, detectable, lvl)
+            enemy_objects.append(enemy)
 
-        logging.debug(f"Loaded wave {wave} with {number_of_enemies} enemies")
+            # Adding the enemy into groups
+            self.not_spawned_enemies.append(enemy)
+
+        logging.info(f"Loaded wave {wave} with {number_of_enemies} enemies")
 
         # EnemyObjects in a list
         return enemy_objects
-    
-    def add_enemies_to_group(self, enemies: list(EnemyObject)) -> None:
-        """ Add enemies in list to not_spawned_enemies group. Called after wave_loader"""
-        logging.debug(f"Adding {len(enemies)} enemies to not_spawned_enemies group")
-        for enemy in enemies:
-            self.not_spawned_enemies.add(enemy)
-    
+        
     
     def spawn_enemy(self, frames:int, spawn_delay:int) -> None:
         """ Transfer enemy from not_spawned to living and moving groups in intervals. Called every frame"""
         if len(self.not_spawned_enemies) == 0:
-            return None
+            return 
         
         if frames % spawn_delay == 0:
-            enemy = self.not_spawned_enemies[0]
-            self.not_spawned_enemies.remove(self.not_spawned_enemies[0])
+            enemy = self.not_spawned_enemies.pop(0)
 
             self.living_enemies.add(enemy)
             self.moving_objects.add(enemy)
@@ -131,10 +130,8 @@ class GameManager:
     def move_enemy(self, enemy: EnemyObject, position:tuple) -> None:
         """ Move enemy to position"""
 
-        logging.debug(f"Moving enemy {enemy} to position {position}")
-        enemy.x = position[0]
-        enemy.y = position[1]
-        #TODO animation index change?
+        logging.info(f"Moving enemy {enemy} to position {position}")
+        # move enemy to position
            
 
     def handle_enemy_hp(self) -> None:
@@ -152,6 +149,8 @@ class GameManager:
 
     def buy_tower(self, tower:TowerType, position:tuple) -> TowerObject:
         """ Buy tower if player has enough coins and create tower object and add it in static objects + towers group"""
+        ### TODO zmwnit tohle at to tam neni napsane vicekrat
+
         if self.coins >= tower_dict[tower].PRICE:
             self.coins -= tower_dict[tower].PRICE
             if tower_dict[tower].TYPE == "projectile":
@@ -232,13 +231,14 @@ class GameManager:
 
         frames = 0
         while self.running:
-            frames += 1 #nevim jestli maji bezet kdyz je pauza
             self.clock.tick(Game.FPS)
 
             self.handle_input()
 
             if self.pause:
                 continue
+
+            frames += 1 #bezi kdzy neni pauza
 
             self.update()
     
