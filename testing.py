@@ -1,4 +1,0 @@
-from game_objects import active_object,inactive_object,immobile_object,mobile_object
-from game_objects.towers import tower_object
-from game_objects.tiles import tile_object
-from game_objects.enemies import enemy_object
