@@ -32,7 +32,7 @@ class Colors:
     PATH = (255, 255, 0)
     START = (0, 255, 0)
     END = (255, 0, 0)
-    WALLS = (255, 0, 0)
+    WALLS = (255, 255, 255)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
     BUTTONS = (55, 55, 0)
