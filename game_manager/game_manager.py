@@ -125,13 +125,6 @@ class GameManager:
 
             logging.debug(f"Spawned enemy {enemy} with spawn delay {spawn_delay}")
             # Enemy is in living group and moving objects group --> One group will be drawn every frame
-
-
-    def move_enemy(self, enemy: EnemyObject, position:tuple) -> None:
-        """ Move enemy to position"""
-
-        logging.info(f"Moving enemy {enemy} to position {position}")
-        # move enemy to position
            
 
     def handle_enemy_hp(self) -> None:
