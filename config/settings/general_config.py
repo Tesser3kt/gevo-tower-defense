@@ -33,7 +33,7 @@ class Colors:
     START = (0, 255, 0)
     END = (255, 0, 0)
     WALLS = (255, 255, 255)
-    MENU_BG = (0, 0, 255)
+    MENU_BG = None
     MENU_TEXT = (255, 0, 255)
     BUTTONS = (55, 55, 0)
 
@@ -149,3 +149,8 @@ class Wave_difficulty:
         Difficulty.HARDER : Harder_wave.harder_wave,
         Difficulty.IMPOSSIBLE : Impossible_wave.impossible_wave
     }
+
+
+class Gui_font:
+    size = 20
+    path = os.path.join(Directory.ASSETS_DIR, "fonts", "UbuntuNerdFont-Bold.ttf")
