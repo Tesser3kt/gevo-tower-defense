@@ -8,54 +8,48 @@
 #jakým směrem střílet(věž,enemak) ->vektor
 #   jak dlouho to poletí na současnou polohu
 #   posunout enemaka o ten čas vrátit jeho směr od věže
-
+from pygame import Rect
+from queue import Queue
 
 class AI:
+    """Class for moving enemies and firing towers"""
     def __init__(self,level:dict,enemies:list) -> None:
         self.level=level
         self.enemies=enemies
-        self.available_paths = []
+        self.available_paths = {}
         self.subsequent={}
         self.enemy_paths=[]
 
-    def najdi_sousedy(self,vertex:tuple[int],path,visited:list[tuple[int]]=[])->list[tuple[int]]:
+    #path finding methods
+    def najdi_sousedy(self,vertex:Rect,visited:list[Rect]=[])->list[Rect]:
         """Returns not visited neighbours for a vertex"""
         path=self.level["path"]
         sousedi=[]
         for node in path:
             if node in visited:continue
-            distance = (abs(vertex[0]-node[0]),abs(vertex[1]-node[1]))
+            print(vertex)
+            distance = (abs(vertex[0].x-node.x),abs(vertex[1].y-node.y))
             if distance[0]==1 or distance[1]==1:
                 sousedi.append(node)
         return sousedi
 
-    def find_paths(self,start:tuple[int],visited:list[tuple[int]]=[])->None:
+    def find_paths(self,start:Rect,visited:list[Rect]=[])->None:
         """Arranges all the paths between different rozcestí"""
+        paths_names = ["b","c","d","e"]
         vertex=start
-        heap = [vertex]
-        while True:
-            node=heap.pop()
-            visited.append(node)
-            if node == self.level["end"][0]:break
-
-            sousedi = self.najdi_sousedy(node,self.level["path"],visited)
+        q = Queue()
+        q.put(vertex)
+        self.available_paths["a"]=[]
+        while q.size():
+            node,cesta=q.get()
+            self.available_paths[cesta].append(node)
+            sousedi = self.najdi_sousedy(node,self.available_paths[cesta])
             
-            if len(sousedi)>1:
-                for i in range(len(sousedi)):
-                    self.find_paths(sousedi[i],[node])
-            else:
-                visited.append(sousedi[0])
-                heap.append(sousedi[0])
-
-        self.available_paths.append(visited)
-
-    def subsequent_paths(self)->None:
-        """For every rozcesti writes the indexes for the paths that come after it"""
-        for path1 in enumerate(self.available_paths):
-            self.subsequent[path1[len(path1)]]=[]
-            for i,path2 in enumerate(self.available_paths):
-                if path1[len(path1)]==path2[0]:
-                    self.subsequent[path1[len(path1)]].append(i)
+            q.put((sousedi.pop(),cesta))
+            for soused in sousedi:
+                pathid = paths_names[len(list(self.available_paths))]
+                self.available_paths[pathid] = [soused]
+                q.put((soused,pathid))
 
     def sort_paths(self)->None:
         """Sorts indexes for paths by their length"""
@@ -84,4 +78,5 @@ class AI:
             self.enemy_paths[i]=path
     
     def get_next_step(self,enemy_index:int)->tuple:
+        """Returns next step for the enemy"""
         return self.enemy_paths[enemy_index].pop(0)
