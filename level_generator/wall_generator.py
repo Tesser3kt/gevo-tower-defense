@@ -36,8 +36,10 @@ def convert_to_array(img: Image) -> list:
 
 def generate_walls(img: Image, lvl: int):
     converted_image = convert_to_array(img)
+    points_to_draw = []
+    walls = []
 
-    for wall in range(NUMBER_OF_WALLS_DICTIONARY[lvl]):
+    while len(walls) < NUMBER_OF_WALLS_DICTIONARY[lvl]:
         x_one = randint(0, Tile.WIDTH - 1)
         y_one = randint(0, Tile.HEIGHT - 1)
 
@@ -46,38 +48,51 @@ def generate_walls(img: Image, lvl: int):
         
         y = y_one
         x = x_one
+        trash_wall = False
 
         while y < y_two:
             y += 1
             if converted_image[x_one][y] == Colors.PATH or converted_image[x_one][y] == Colors.START or converted_image[x_one][y] == Colors.END:
-                continue
-            draw_point(x_one, y, img)
+                trash_wall = True
+                break
+            points_to_draw.append((x_one, y))
 
 
         while y > y_two:
             y -= 1
             if converted_image[x_one][y] == Colors.PATH or converted_image[x_one][y] == Colors.START or converted_image[x_one][y] == Colors.END:
-                continue
-            draw_point(x_one, y, img)
+                trash_wall = True
+                break
+            points_to_draw.append((x_one, y))
 
 
         while x < x_two:
             x += 1
             if converted_image[x][y_one] == Colors.PATH or converted_image[x][y_one] == Colors.START or converted_image[x][y_one] == Colors.END:
-                continue
-            draw_point(x, y_one, img)
+                trash_wall = True
+                break
+            points_to_draw.append((x, y_one))
 
 
         while x > x_two:
             x -= 1
             if converted_image[x][y_one] == Colors.PATH or converted_image[x][y_one] == Colors.START or converted_image[x][y_one] == Colors.END:
-                continue
-            draw_point(x, y_one, img)
-
+                trash_wall = True
+                break
+            points_to_draw.append((x, y_one))
 
         if converted_image[x_one][y_one] == Colors.PATH or converted_image[x_one][y_one] == Colors.START or converted_image[x_one][y_one] == Colors.END:
-            continue
-        draw_point(x_one, y_one, img)
+            trash_wall = True
+            break
+        points_to_draw.append((x_one, y_one))
+
+        if not trash_wall:
+            walls.append(points_to_draw.copy())
+        points_to_draw = []
+
+    for wall in walls:
+        for point in wall:
+            draw_point(point[0], point[1], img)
 
     
 def create_walls(lvl: int):
