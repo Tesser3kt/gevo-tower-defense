@@ -19,6 +19,8 @@ class AI:
         self.available_paths = {}
         self.subsequent={}
         self.enemy_paths=[]
+        self.paths_names = ["b","c","d","e"]
+
 
     #path finding methods
     def najdi_sousedy(self,vertex:Rect,visited:list[Rect]=[])->list[Rect]:
@@ -28,26 +30,28 @@ class AI:
         for node in path:
             if node in visited:continue
             print(vertex)
-            distance = (abs(vertex[0].x-node.x),abs(vertex[1].y-node.y))
+            distance = (abs(vertex[0].x-node.x),abs(vertex[0].y-node.y))
             if distance[0]==1 or distance[1]==1:
                 sousedi.append(node)
         return sousedi
 
     def find_paths(self,start:Rect,visited:list[Rect]=[])->None:
         """Arranges all the paths between different rozcestí"""
-        paths_names = ["b","c","d","e"]
         vertex=start
         q = Queue()
-        q.put(vertex)
+        q.put((vertex,"a"))
         self.available_paths["a"]=[]
-        while q.size():
+        while q.not_empty:
             node,cesta=q.get()
             self.available_paths[cesta].append(node)
             sousedi = self.najdi_sousedy(node,self.available_paths[cesta])
             
+            if node == self.level["end"] or not len(sousedi):
+                continue
+
             q.put((sousedi.pop(),cesta))
             for soused in sousedi:
-                pathid = paths_names[len(list(self.available_paths))]
+                pathid = self.paths_names[len(list(self.available_paths))]
                 self.available_paths[pathid] = [soused]
                 q.put((soused,pathid))
 
