@@ -19,7 +19,6 @@ class AI:
         self.available_paths = {}
         self.subsequent={}
         self.enemy_paths=[]
-        self.paths_names = ["b","c","d","e"]
 
 
     #path finding methods
@@ -27,32 +26,38 @@ class AI:
         """Returns not visited neighbours for a vertex"""
         path=self.level["path"]
         sousedi=[]
+        #print(vertex)
         for node in path:
             if node in visited:continue
-            print(vertex)
-            distance = (abs(vertex[0].x-node.x),abs(vertex[0].y-node.y))
-            if distance[0]==1 or distance[1]==1:
+            distance = (abs(node.x-vertex.x),abs(node.y-vertex.y))
+            if distance==(0,16) or distance==(16,0):
+                #print(vertex.x,vertex.y,node.x,node.y)
                 sousedi.append(node)
         return sousedi
 
-    def find_paths(self,start:Rect,visited:list[Rect]=[])->None:
-        """Arranges all the paths between different rozcestí"""
-        vertex=start
+    def find_paths(self,start:Rect)->None:
+        """Finds all the paths in the level"""
+        vertex=start[0]
         q = Queue()
-        q.put((vertex,"a"))
-        self.available_paths["a"]=[]
-        while q.not_empty:
+        q.put((vertex,1))
+        self.available_paths[1]=[]
+        while not q.empty():
             node,cesta=q.get()
+            print(self.available_paths[1])
+            #print("current",node,cesta, self.available_paths[cesta])
             self.available_paths[cesta].append(node)
             sousedi = self.najdi_sousedy(node,self.available_paths[cesta])
-            
-            if node == self.level["end"] or not len(sousedi):
-                continue
 
+            if node == self.level["end"][0] or not len(sousedi):
+                continue
+            
+            print(len(sousedi))
+            print("počet cest",len(self.available_paths))
             q.put((sousedi.pop(),cesta))
             for soused in sousedi:
-                pathid = self.paths_names[len(list(self.available_paths))]
-                self.available_paths[pathid] = [soused]
+                pathid = len(list(self.available_paths))+1
+                #print(pathid)
+                self.available_paths[pathid] = [self.available_paths[cesta].copy()]
                 q.put((soused,pathid))
 
     def sort_paths(self)->None:
