@@ -1,19 +1,19 @@
-#pygame imports
+# pygame imports
 from pygame.sprite import RenderUpdates
 from pygame.time import Clock
-from pygame import event, QUIT, quit
-from pygame import locals
+from pygame import event, QUIT, quit, locals, display, SCALED, font
+from pygame.transform import scale
 
 # python imports
 import logging
 
 
-# project imports
+# --- PROJECT IMPORTS ---
 
 # config
 from config.settings.enemies import *
 from config.settings.towers import *
-from config.settings.general_config import Economy, Game, Difficulty, Wave_difficulty
+from config.settings.general_config import Economy, Game, Difficulty, Wave_difficulty, Window, Colors
 
 # objects
 from game_objects.enemies.enemy_object import EnemyObject
@@ -26,10 +26,21 @@ from game_objects.towers.splash_tower import SplashTower
 from graphics_manager.graphics_manager import GraphicsManager
 from game_manager import wave_maker, spawn_delay
 from level_converter.level_converter import convert_level
+from level_generator.level_generator import generate_level
+
+# texture loader
+from texture_loader.texture_loader import TextureLoader
+
+# gui
+from gui.gui import Gui
 
 class GameManager:
     """ The ultimate class that controls everything everywhere """
     def __init__(self) -> None:
+        self.screen = None
+        self.textures = {}
+        self.gui = None
+
         self.objects = RenderUpdates()
 
         self.projectiles = RenderUpdates()
@@ -60,12 +71,79 @@ class GameManager:
 
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
-#-------------------------------------- HANDLE ENEMIES ------------------------------------------------------
+#-------------------------------------- STARTER THINGS ------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------   
+
+    def create_screen(self) -> None:
+        """ Create screen"""
+        self.screen = display.set_mode((Window.WIDTH, Window.HEIGHT), SCALED)
+        self.screen.fill(Colors.BACKGROUND)
+
+    def init_things(self) -> None:
+        """ Initialize some things"""
+        font.init()
+        self.gui = Gui()
+
+    def initialize(self):
+        """ Initialize game"""
+        generate_level(self.level)
+        self.load_textures()
+        self.converted_level = convert_level(self.level)
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#-------------------------------------- TEXTURES ------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+    def load_textures(self) -> None:
+        """ Load all textures from texture_loader"""
+        self.textures = TextureLoader().load_all_textures()
+        logging.info(f"Loaded {len(self.textures)} textures")
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#---------------------------------------- GUI ---------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+    def show_gui(self, screen) -> None:
+        """ Show gui on screen"""
+        self.gui.show_coins(screen, self.coins)
+        self.gui.show_lives(screen, self.lives)
+        self.gui.show_wave(screen, self.wave)
+        self.gui.show_towers(screen, self.textures)
+
+
+    def test_run(self) -> None:
+
+        self.init_things()
+        self.create_screen()
+        self.initialize()
+
+        self.show_map()
+        self.show_gui(self.screen)
+
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#---------------------------------------- SHOW MAP ----------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 
-    def initialize(self):
-        self.converted_level = convert_level(self.level)
+    def show_map(self) -> None:
+        """ Show map on screen"""
+        for tile in self.converted_level:
+            for pixel in range(len(self.converted_level[tile])):
+                image = self.textures["game_objects"]["tiles"][tile][0]
+                image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))      
+                sprite = self.converted_level[tile][pixel]
+                self.screen.blit(image, sprite)  
+
+# #------------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
+# #-------------------------------------- HANDLE ENEMIES ------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
 
 
     def get_start(self) -> tuple:
