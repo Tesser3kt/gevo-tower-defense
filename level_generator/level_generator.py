@@ -118,7 +118,7 @@ def generate_level(lvl:int):
         Direction.RIGHT.value: 250
     }
 
-    img = Image.new('RGB', (Tile.WIDTH, Tile.HEIGHT), color = (0, 0, 0))
+    img = Image.new('RGB', (Tile.WIDTH, Tile.HEIGHT), color = Colors.BACKGROUND)
 
     #Vytvoří random start na random ose a pak vybere 1 start 
     start_osa_1 = 0, random.randint(5, Tile.HEIGHT-5)
