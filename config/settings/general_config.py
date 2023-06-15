@@ -4,6 +4,11 @@ from config.settings.general_imports import *
 class Window:  
     HEIGHT = 800
     WIDTH = 960
+    GUI_POS = (0, 0)
+    LIVES_POS = (WIDTH-100, 5)
+    COINS_POS = (WIDTH-200, 5)
+    WAVE_POS = (WIDTH-300, 5)
+    TOWERS_POS = (10, 5)
 
 class Tile:
     PIXEL_SIZE = 16
@@ -14,6 +19,7 @@ class Tile:
 class Directory:
     BASE_DIR = os.getcwd()
     ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+    EXCLUDED_DIRS = ["fonts", "level_maps"] #for texture_loader
     
 class Economy:
     STARTING_MONEY = 100
@@ -34,7 +40,7 @@ class Colors:
     END = (255, 0, 0)
     WALLS = (255, 255, 255)
     MENU_BG = None
-    MENU_TEXT = (255, 0, 255)
+    MENU_TEXT = (25, 25, 55)
     BUTTONS = (55, 55, 0)
 
 class Difficulty:
