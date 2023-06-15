@@ -1,8 +1,8 @@
-from active_object import ActiveObject
-from immobile_object import ImmobileObject
+from game_objects.active_object import ActiveObject
+from game_objects.immobile_object import ImmobileObject
 
 from pygame.surface import Surface
-from tower_type import TowerType
+from game_objects.towers.tower_type import TowerType
 
 import time
 
