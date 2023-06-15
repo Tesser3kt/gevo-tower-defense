@@ -1,7 +1,7 @@
-from active_object import ActiveObject
-from mobile_object import MobileObject
+from game_objects.active_object import ActiveObject
+from game_objects.mobile_object import MobileObject
 
-from enemy_type import EnemyType
+from game_objects.enemies.enemy_type import EnemyType
 from pygame.surface import Surface
 
 
