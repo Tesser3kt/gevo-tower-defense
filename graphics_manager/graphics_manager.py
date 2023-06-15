@@ -3,9 +3,9 @@ import pygame as pg #importing pygame
 import logging #importing logging
 from config.settings.general_config import Window #importing Window class from config
 from config.settings.general_config import Colors #importing colors class from config
-from texture_loader import texture_loader #importing texture_loader
+from texture_loader.texture_loader import TextureLoader #importing texture_loader
 from game_objects.game_object import GameObject #importing GameObject
-from config.enums.object_animation import ObjectAnimation
+#from config.enums.object_animation import ObjectAnimation
 logging.debug("everything imported succesfully. ")
 
 class GraphicsManager:
@@ -27,7 +27,7 @@ class GraphicsManager:
     def load_all_textures(self) -> None:
         """Initializates load_all_textures method."""
         logging.debug("Load_all_functions called.")
-        self.textures = texture_loader.load_all_textures()
+        self.textures = TextureLoader.load_all_textures(self)
 
     def init_graphics(self) -> None:
         """ Initializate graphics. """
@@ -49,7 +49,7 @@ class GraphicsManager:
         logging.debug("Rects_to_update erased.")
         logging.debug("Screen updated succesfully!")
 
-    def get_object_animation(self, object: ObjectAnimation) -> list:
+    def get_object_animation(self, object) -> list:
         """ Returns list of animations. """
         logging.debug(" Get_object_animation function of GraphicsManager class called.")
         objects_animations = []

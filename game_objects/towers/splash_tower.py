@@ -1,6 +1,6 @@
 from pygame.surface import Surface
-from tower_type import TowerType
-from tower_object import TowerObject
+from game_objects.towers.tower_type import TowerType
+from game_objects.towers.tower_object import TowerObject
 
 class SplashTower(TowerObject):
     """ Class for splash tower objects """
@@ -8,8 +8,7 @@ class SplashTower(TowerObject):
     def __init__(
      self, x: int, y: int, width: int, height: int, image: Surface,
      animation: list[Surface],damage:int,reload_time:int,
-     tower_type:TowerType, animation_index: int = 0, lvl:int=1,
-     splash_animation:list[Surface]
+     tower_type:TowerType,splash_animation:list[Surface], animation_index: int = 0, lvl:int=1,
     )->None:
 
     TowerObject.__init__(x,y,width,height,image,animation,damage,reload_time,

@@ -1,7 +1,7 @@
 from pygame.surface import Surface
 
-from tower_object import TowerObject
-from tower_type import TowerType
+from game_objects.towers.tower_object import TowerObject
+from game_objects.towers.tower_type import TowerType
 
 class ProjectileTower(TowerObject):
     """ Class for projectile tower objects """
