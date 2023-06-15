@@ -3,7 +3,7 @@ import logging
 from pygame.image import load
 import pygame as pg
 import os
-from config.settings.general_config import BASE_DIR, ASSETS_DIR
+from config.settings.general_config import Directory
 logging.debug("Everything imported succesfully. ")
 class TextureLoader:
     """ Texture loader class. """
@@ -12,7 +12,7 @@ class TextureLoader:
 
     def load_all_textures(self) -> dict:
         """ Load all textures. Returns dictionary of textures sorted by folders."""
-        assets_path = os.path.join(BASE_DIR, ASSETS_DIR)
+        assets_path = os.path.join(Directory.BASE_DIR, Directory.ASSETS_DIR)
         logging.debug("Assets path created succesfully. ")
         logging.info(r"Function 'load_all_textures' of TextureLoader class object called succesfully.")
         
@@ -24,6 +24,8 @@ class TextureLoader:
             print(f"Path {assets_path} does not exist.")
             pg.quit()
         for folder in os.listdir(assets_path):
+            if folder in Directory.EXCLUDED_DIRS:
+                continue
             logging.debug(f"Listing in folder{assets_path} ...")
             if folder not in texture_dict:
                 texture_dict[folder] = {}
@@ -56,7 +58,7 @@ class TextureLoader:
                             logging.debug(f"Loaded image {os.path.join(assets_path, folder, sub_folder, textures, texture)}")
                             image = image.convert()
                         except Exception as e:
-                            logging.error(f"Failed to load or convert {texture}: {e.message}")
+                            logging.error(f"Failed to load or convert {texture}: {e}")
                             pg.quit()
                         logging.debug(f"Converted image {os.path.join(assets_path, folder, sub_folder, textures, texture)}")
                         texture_dict[folder][sub_folder][textures].append(image)
