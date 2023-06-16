@@ -1,20 +1,19 @@
 """Configuration file"""
 from config.settings.general_imports import *
 
-class Window:  
-    HEIGHT = 800
-    WIDTH = 960
-    GUI_POS = (0, 0)
-    LIVES_POS = (WIDTH-100, 5)
-    COINS_POS = (WIDTH-200, 5)
-    WAVE_POS = (WIDTH-300, 5)
-    TOWERS_POS = (10, 5)
-
 class Tile:
     PIXEL_SIZE = 16
     HEIGHT = 50 #How many tiles are in height
     WIDTH = 60 #How many tiles are in width
     # 60T*50T, 1T = 16px
+
+class Window:  
+    GUI_POS = (0, 0)
+    GUI_SCALE = 4
+    GUI_HEIGHT = (Tile.PIXEL_SIZE+2*5)*GUI_SCALE
+
+    HEIGHT = 800 + GUI_HEIGHT
+    WIDTH = 960
 
 class Directory:
     BASE_DIR = os.getcwd()
@@ -39,7 +38,7 @@ class Colors:
     START = (0, 255, 0)
     END = (255, 0, 0)
     WALLS = (255, 255, 255)
-    MENU_BG = None
+    MENU_BG = (55, 25, 25)
     MENU_TEXT = (25, 25, 55)
     BUTTONS = (55, 55, 0)
 

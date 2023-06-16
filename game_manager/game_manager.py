@@ -42,6 +42,7 @@ class GameManager:
         self.gui = None
         self.graphics_manager = None
 
+        self.changed_rects = []
         self.objects = RenderUpdates()
 
         self.projectiles = RenderUpdates()
@@ -58,9 +59,12 @@ class GameManager:
         self.ui = RenderUpdates()
 
         self.coins:int = Economy.STARTING_MONEY
+        self.new_coins:int = Economy.STARTING_MONEY
         self.lives:int = Economy.STARTING_LIVES
+        self.new_lives:int = Economy.STARTING_LIVES
         self.level:int = Game.START_LEVEL
         self.wave:int = Game.START_WAVE
+        self.new_wave:int = Game.START_WAVE
 
         self.converted_level = []
 
@@ -99,23 +103,26 @@ class GameManager:
 #---------------------------------------- GUI ---------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
-    def show_gui(self, screen) -> None:
-        """ Show gui on screen"""
-        self.gui.show_coins(screen, self.coins)
-        self.gui.show_lives(screen, self.lives)
-        self.gui.show_wave(screen, self.wave)
-        self.gui.show_towers(screen, self.textures)
-
 
     def test_run(self) -> None:
 
         self.init_things()
         self.initialize()
 
-        self.show_map()
-        self.show_gui(self.screen)
+        #self.show_map()
+        self.gui.create_gui(self.graphics_manager.screen, self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
+    def update_gui(self) -> None:
+        self.gui.show_lives(self.graphics_manager.screen, self.lives)
+        self.gui.show_coins(self.graphics_manager.screen, self.coins)
+        self.gui.show_wave(self.graphics_manager.screen, self.wave)
+        self.changed_rects += self.gui.changed_rects
 
+    def update_changed_rects(self) -> None:
+        self.graphics_manager.rects_to_update = self.changed_rects
+        self.graphics_manager.update()
+        self.changed_rects = []
+        self.gui.changed_rects = []
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 #---------------------------------------- SHOW MAP ----------------------------------------------------------
@@ -136,8 +143,8 @@ class GameManager:
                 image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
                 image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))      
                 rect = self.converted_level[tile][pixel]
-
-                rect = TileObject(x=rect.x, y=rect.y, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
+                                                #TODO tohle podtim sus, nevim, test. Cil je aby se to posunulo pod gui
+                rect = TileObject(x=rect.x, y=rect.y+Window.GUI_HEIGHT, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
                 self.tiles.add(rect)
                 self.static_objects.add(rect)
                 
