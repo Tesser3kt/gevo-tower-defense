@@ -15,11 +15,12 @@ class AI:
     """Class for moving enemies and firing towers"""
     def __init__(self,level:dict,enemies:list) -> None:
         self.level=level
-        self.enemies=enemies
+        self.enemies = enemies
+        self.enemypaths ={}
         self.available_paths = {}
-        self.subsequent={}
-        self.enemy_paths=[]
 
+        for enemy in enemies:
+            self.enemypaths.setdefault(enemy,["",0])
 
     #path finding methods
     def najdi_sousedy(self,vertex:Rect,visited:list[Rect]=[])->list[Rect]:
@@ -51,8 +52,6 @@ class AI:
             if node == self.level["end"][0] or not len(sousedi):
                 continue
             
-            print(len(sousedi))
-            print("počet cest",len(self.available_paths))
             q.put((sousedi.pop(),cesta))
             for soused in sousedi:
                 pathid = len(list(self.available_paths))+1
@@ -60,14 +59,16 @@ class AI:
                 self.available_paths[pathid] = [self.available_paths[cesta].copy()]
                 q.put((soused,pathid))
 
-    def sort_paths(self)->None:
-        """Sorts indexes for paths by their length"""
-        for rozcesti in self.subsequent:
-            self.subsequent[rozcesti]=sorted(self.subsequent[rozcesti], key=lambda x: len(self.available_paths[x]))
-    
+    def get_next_step(self,enemy:object):
+        """Returns next step in the apropriet path for the enemy"""
+        pathid = self.enemypaths[enemy][0]
+        self.enemypaths[enemy][1] +=1
+        positionindex =self.enemypaths[enemy][1]
+        return self.available_paths[pathid][positionindex]
+
     def assign_path_to_enemies(self)->None:
         """For every enemy in game it chooses the correct path"""
-        for i,enemy in enumerate(self.enemies):
+        for i,enemy in enumerate(list(self.enemies)):
             preference = "long" #this will be assigned depending on the enemytype and their preferency
             path = [x for x in self.available_paths[0]]
             rozcesti = path[len(path)]
@@ -84,8 +85,3 @@ class AI:
                     subpath = self.available_paths[self.subsequent[rozcesti][len(self.subsequent[rozcesti])//2]]
                     path.append([x for x in subpath])
                     rozcesti = path[len(path)]
-            self.enemy_paths[i]=path
-    
-    def get_next_step(self,enemy_index:int)->tuple:
-        """Returns next step for the enemy"""
-        return self.enemy_paths[enemy_index].pop(0)
