@@ -3,7 +3,7 @@ import logging
 from pygame.image import load
 import pygame as pg
 import os
-from config.setting.general_config import BASE_DIR, ASSETS_DIR
+from config.settings.general_config import BASE_DIR, ASSETS_DIR
 logging.debug("Everything imported succesfully. ")
 class TextureLoader:
     """ Texture loader class. """
