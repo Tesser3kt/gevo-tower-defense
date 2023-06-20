@@ -1,7 +1,7 @@
-from inactive_object import InactiveObject
-from immobile_object import ImmobileObject
+from game_objects.inactive_object import InactiveObject
+from game_objects.immobile_object import ImmobileObject
 
-from tile_type import TileType
+from game_objects.tiles.tile_type import TileType
 from pygame.surface import Surface
 
 class TileObject(InactiveObject,ImmobileObject):
