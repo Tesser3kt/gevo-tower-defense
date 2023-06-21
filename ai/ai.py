@@ -45,7 +45,7 @@ class AI:
         self.available_paths[1]=[]
         while not q.empty():
             node,cesta=q.get()
-            print(self.available_paths[1])
+            #print(self.available_paths[1])
             #print("current",node,cesta, self.available_paths[cesta])
             self.available_paths[cesta].append(node)
             sousedi = self.najdi_sousedy(node,self.available_paths[cesta])
@@ -60,7 +60,7 @@ class AI:
                 self.available_paths[pathid] = [self.available_paths[cesta].copy()]
                 q.put((soused,pathid))
 
-    def get_next_step(self,enemy:object):
+    def get_next_step(self,enemy):
         """Returns next step in the apropriet path for the enemy"""
         pathid = self.enemypaths[enemy][0]
         self.enemypaths[enemy][1] +=1
