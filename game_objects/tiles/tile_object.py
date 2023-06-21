@@ -14,8 +14,8 @@ class TileObject(InactiveObject,ImmobileObject):
         type:TileType=TileType.DEFAULT
 
     ) -> None:
-        InactiveObject.__init__(x, y, width, height, image)
-        ImmobileObject.__init__(x, y, width, height, image)
+        InactiveObject.__init__(self, x, y, width, height, image)
+        ImmobileObject.__init__(self, x, y, width, height, image)
 
         self.type=type
         #change the image based on the tile type from the config.
