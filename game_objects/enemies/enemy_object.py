@@ -14,8 +14,8 @@ class EnemyObject(ActiveObject,MobileObject):
     animation:list[Surface], animation_index:int = 0,
     detectable:bool=True,lvl:int=1
     ) -> None:
-        ActiveObject.__init__(x,y,width,height,image,animation,animation_index,lvl)
-        MobileObject.__init__(x,y,width,height,image,speed,direction)
+        ActiveObject.__init__(self,x,y,width,height,image,animation,animation_index,lvl)
+        MobileObject.__init__(self,x,y,width,height,image,speed,direction)
 
         self.hp=hp
         self.detectable=detectable

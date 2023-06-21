@@ -2,6 +2,7 @@ from game_objects.active_object import ActiveObject
 from game_objects.immobile_object import ImmobileObject
 
 from pygame.surface import Surface
+from pygame.sprite import Sprite
 from game_objects.towers.tower_type import TowerType
 
 import time
@@ -14,8 +15,8 @@ class TowerObject(ActiveObject,ImmobileObject):
      tower_type:TowerType, animation_index: int = 0, lvl:int=1,
      
      ) -> None:
-        ActiveObject.__init__(x,y,width,height,image,animation,animation_index,lvl)
-        ImmobileObject.__init__(x,y,width,height,height,image)
+        ActiveObject.__init__(self,x,y,width,height,image,animation,animation_index,lvl)
+        ImmobileObject.__init__(self,x,y,width,height,image)
 
         self.damage=damage
         self.reload_time=reload_time
