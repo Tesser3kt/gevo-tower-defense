@@ -10,17 +10,18 @@
 #   posunout enemaka o ten čas vrátit jeho směr od věže
 from pygame import Rect
 from queue import Queue
-
+from pygame.sprite import RenderUpdates
 class AI:
     """Class for moving enemies and firing towers"""
-    def __init__(self,level:dict,enemies:list) -> None:
+    def __init__(self,level:dict,enemies:RenderUpdates) -> None:
         self.level=level
         self.enemies = enemies
         self.enemypaths ={}
         self.available_paths = {}
 
+        #this is silly needs to be done better
         for enemy in enemies:
-            self.enemypaths.setdefault(enemy,["",0])
+            self.enemypaths[enemy]=["",0]
 
     #path finding methods
     def najdi_sousedy(self,vertex:Rect,visited:list[Rect]=[])->list[Rect]:
@@ -66,6 +67,7 @@ class AI:
         positionindex =self.enemypaths[enemy][1]
         return self.available_paths[pathid][positionindex]
 
+    #not working do not use!!
     def assign_path_to_enemies(self)->None:
         """For every enemy in game it chooses the correct path"""
         for i,enemy in enumerate(list(self.enemies)):
