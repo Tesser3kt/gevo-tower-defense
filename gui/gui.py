@@ -2,17 +2,23 @@ from pygame.font import Font
 from config.settings.general_config import Gui_font, Colors, Window, Tile
 from config.settings.towers import *
 from game_objects.game_object import GameObject
+from graphics_manager.graphics_manager import GraphicsManager
 
-from pygame import draw
-
+from pygame import draw, display, Surface
+from pygame.sprite import RenderUpdates, Sprite
 from pygame.transform import scale
+
+
 class Gui():
-    def __init__(self) -> None:
+    def __init__(self, gfx_manager:GraphicsManager) -> None:
+        self.graphics_manager = gfx_manager
         self.position  = Window.GUI_POS
         self.font_size = Gui_font.size
         self.path = Gui_font.path
         self.color = Colors.MENU_TEXT
         self.background_color = Colors.MENU_BG
+
+        self.background = None
 
 
         self.font = Font(self.path, self.font_size)
@@ -26,16 +32,18 @@ class Gui():
         self.coins_pos = (self.gui_width-230, self.center_for_text)
         self.wave_pos = (self.gui_width-320, self.center_for_text)
 
-        self.lives_rect = None
-        self.coins_rect = None
-        self.wave_rect = None
+        self.lives = RenderUpdates()
+        self.coins = RenderUpdates()
+        self.wave = RenderUpdates()
+        self.pause = RenderUpdates()
 
         self.towers_pos = []
-        self.changed_rects = []
+
+        self.tower_cards = RenderUpdates()
 
     def create_gui(self, screen, lives:int, coins:int, wave:int, textures:dict):
         """ Creates the gui"""
-        self.background(screen)
+        self.draw_background()
         self.show_lives(screen, lives)
         self.show_coins(screen, coins)
         self.show_wave(screen, wave)
@@ -43,26 +51,33 @@ class Gui():
 
 
 
-    def background(self, screen):
+    def draw_background(self):
         """ Draws the background of the gui"""
-        draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
+        #draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
+        self.background = Surface((Window.WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1]))
+        self.background.fill(self.background_color)
+
+        background_object = GameObject(self.position[0], self.position[1], Window.WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1], self.background)
+        self.graphics_manager.draw_object(background_object)
 
     def create_towers_grid(self):
         """ Creates the grid of tower cards"""
         for tower in range(len(tower_types)):
             self.towers_pos.append((5+tower*Tile.PIXEL_SIZE*self.gui_scale+5*tower, (self.gui_height-Tile.PIXEL_SIZE*self.gui_scale)//2))
 
-    def show_lives(self, screen, lives:int):
+    def show_lives(self, lives:int):
         """ Shows the lives on the screen"""
 
-        # Draw a rectangle to cover the previous text
-        if self.lives_rect:
-            draw.rect(screen, self.background_color, self.lives_rect)
         # Create the new text
         lives_text = self.font.render(f'Lives: {str(lives)}', True, self.color, self.background_color)
-        self.lives_rect = lives_text.get_rect(topleft=self.lives_pos)
-        self.changed_rects.append(self.lives_rect)
-        screen.blit(lives_text, self.lives_pos)
+        lives_rect = lives_text.get_rect(topleft=self.lives_pos)
+
+        lives = GameObject(lives_rect.x, lives_rect.y, lives_rect.width, lives_rect.height, lives_text)
+        self.lives.add(lives)
+        self.graphics_manager.draw_group(self.lives, self.background)
+
+
+
 
     def show_coins(self, screen, coins:int):
         """ Shows the coins on the screen"""
@@ -83,7 +98,9 @@ class Gui():
         screen.blit(wave_text, self.wave_pos)
 
 
-    def show_towers(self, screen, textures:dict):
+
+
+    def show_towers(self, textures:dict):
             """ Shows the towers on the screen"""
             self.create_towers_grid()
             for index, tower_type in enumerate(tower_types):
@@ -91,8 +108,21 @@ class Gui():
                 image = textures["game_objects"]["towers"][image_name][0]
                 image = scale(image, (self.gui_scale*Tile.PIXEL_SIZE, self.gui_scale*Tile.PIXEL_SIZE))
                 tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1] , width=self.gui_scale*Tile.PIXEL_SIZE, height=self.gui_scale*Tile.PIXEL_SIZE, image=image)
-                screen.blit(tower_card.image, tower_card.rect)
-                self.changed_rects.append(tower_card.rect)
+                self.tower_cards.add(tower_card)
+            self.graphics_manager.draw_group(self.tower_cards, self.background)
+
+
+
+    def pause_text(self, screen, pause:bool):
+        """ Shows the pause on the screen"""
+        if self.pause_rect:
+            draw.rect(screen, self.background_color, self.pause_rect)
+        if pause:
+            pause_text = self.font.render(f'PAUSE', True, self.color, self.background_color)
+            self.pause_rect = pause_text.get_rect(center=(Window.WIDTH//2, Window.GUI_HEIGHT//2))
+            screen.blit(pause_text, self.pause_rect)
+            display.update(self.pause_rect)
+
 
 
     def change_size(self, size:int):
@@ -102,6 +132,9 @@ class Gui():
         self.gui_scale = size
 
     def change_color(self, color:tuple):
+        """ Changes the color of the font in gui"""
         self.color = color
 
 
+    def draw_rectangle(self, screen):
+        pass

@@ -1,9 +1,9 @@
 # pygame imports
 from pygame.sprite import RenderUpdates
 from pygame.time import Clock
-from pygame import event, QUIT, quit, locals, display, SCALED, font
+from pygame import QUIT, quit, font, locals, display, SCALED,event 
 from pygame.transform import scale
-
+import pygame as pg
 # python imports
 import logging
 
@@ -68,7 +68,6 @@ class GameManager:
 
         self.converted_level = []
 
-
         self.clock = Clock()
 
         self.running = True
@@ -82,8 +81,8 @@ class GameManager:
 #------------------------------------------------------------------------------------------------------------   
 
 
-    def init_things(self) -> None:
-        """ Initialize some things"""
+    def init_modules(self) -> None:
+        """ Initialize some modules"""
         font.init()
         self.graphics_manager = GraphicsManager()
         self.gui = Gui()
@@ -94,7 +93,6 @@ class GameManager:
         self.graphics_manager.init_graphics()
         self.graphics_manager.load_all_textures()
 
-
         self.converted_level = convert_level(self.level)
 
 
@@ -103,14 +101,6 @@ class GameManager:
 #---------------------------------------- GUI ---------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
-
-    def test_run(self) -> None:
-
-        self.init_things()
-        self.initialize()
-
-        #self.show_map()
-        self.gui.create_gui(self.graphics_manager.screen, self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
     def update_gui(self) -> None:
         self.gui.show_lives(self.graphics_manager.screen, self.lives)
@@ -123,6 +113,7 @@ class GameManager:
         self.graphics_manager.update()
         self.changed_rects = []
         self.gui.changed_rects = []
+
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
 #---------------------------------------- SHOW MAP ----------------------------------------------------------
@@ -143,10 +134,10 @@ class GameManager:
                 image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
                 image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))      
                 rect = self.converted_level[tile][pixel]
-                                                #TODO tohle podtim sus, nevim, test. Cil je aby se to posunulo pod gui
                 rect = TileObject(x=rect.x, y=rect.y+Window.GUI_HEIGHT, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
                 self.tiles.add(rect)
                 self.static_objects.add(rect)
+        self.graphics_manager.draw_group(self.tiles)
                 
                 
 
@@ -278,50 +269,78 @@ class GameManager:
 
         
 
+
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------ HANDLE CLICK ON TOWER CARD --------------------------------------
+#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
+ 
+    def handle_card_click(self):
+        clicked_cards = [card for card in self.gui.tower_cards if card.rect.collidepoint(pg.mouse.get_pos())]
+        if not clicked_cards:
+            return
+        
+        clicked_card = clicked_cards[0]
+        rectangle = clicked_card.rect.copy()
+        rectangle.x -= 2
+        rectangle.y -= 2
+        rectangle.width += 4
+        rectangle.height += 4
+
 # #------------------------------------------------------------------------------------------------------------
 # #------------------------------------------------------------------------------------------------------------
 # #------------------------------------------ IMPORTANT ---------------------------------------------------
 # #------------------------------------------------------------------------------------------------------------
 # #------------------------------------------------------------------------------------------------------------
 
-#     def handle_input(self):
-#         """ Handle input from user"""
+    def handle_input(self):
+        """ Handle input from user"""
 
-#         for event in event.get():
-#             if event.type == QUIT:
-#                 quit()
-#             elif event.type == locals.K_ESCAPE:
-#                 self.pause = not self.pause
-
-
-#     def update(self, frames) -> None:
-#         """ Update game state every frame"""
-
-#         if not self.wave_running:
-#             # Load wave
-#             wave = self.wave_loader(self.wave)
-#             self.add_enemies_to_group(wave)        
-#         # Spawn enemies in intervals
-#         self.spawn_enemy(frames, spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
+        for event in pg.event.get():
+            if event.type == QUIT:
+                quit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.pause = not self.pause
+                    self.gui.pause_text(self.graphics_manager.screen, self.pause)
+                elif event.key == pg.MOUSEBUTTONDOWN and event.button == 1:
+                    self.handle_card_click()
 
 
-#         self.handle_enemy_hp()
-    
 
-#     def run(self) -> None:
-#         """ Main game loop"""
+    def update(self) -> None:
+        """ Update game state every frame"""
+        self.update_gui()
+        self.update_changed_rects()
 
-#         frames = 0
-#         while self.running:
-#             self.clock.tick(Game.FPS)
+        #if not self.wave_running:
+            # Load wave
+            #wave = self.wave_loader(self.wave)
+            #self.add_enemies_to_group(wave)        
+        # Spawn enemies in intervals
+        #self.spawn_enemy(frames, spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
+        #self.handle_enemy_hp()
 
-#             self.handle_input()
+    def run(self) -> None:
+        """ Main game loop"""
 
-#             if self.pause:
-#                 continue
+        self.init_modules()
+        self.initialize()
+        #self.show_map()
+        self.gui.create_gui(self.graphics_manager.screen, self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
-#             frames += 1 #bezi kdzy neni pauza
+        frames = 0
+        while self.running:
+            self.clock.tick(Game.FPS)
 
-#             self.update()
+            self.handle_input()
+
+            if self.pause:
+                continue
+
+            frames += 1 #bezi kdzy neni pauza
+            self.lives = frames
+            self.update()
     
     

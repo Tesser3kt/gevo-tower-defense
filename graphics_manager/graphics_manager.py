@@ -18,10 +18,20 @@ class GraphicsManager:
         self.rects_to_update = []
         logging.debug("GraphicsManager class initializer ran succesfully.")
 
-    def draw_group(self, group: pg.sprite.RenderUpdates) -> None:
+    def draw_object(self, object: GameObject, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
-        group.clear(self.screen, self.background)
+        if background is None:
+            background = self.background
+        self.rects_to_update.append(self.screen.blit(object.image, object.rect))
+        logging.debug("Object drawn succesfully.")
+
+    def draw_group(self, group: pg.sprite.RenderUpdates, background=None) -> None:
+        """ Draws object.image texture on object.rect place."""
+        logging.debug(" draw_object method of GraphicsManager called succesfully.")
+        if background is None:
+            background = self.background
+        group.clear(self.screen, background)
         self.rects_to_update += group.draw(self.screen)
 
     def load_all_textures(self) -> None:
