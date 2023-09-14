@@ -11,11 +11,14 @@ class Window:
     GUI_POS = (0, 0)
     GUI_SCALE = 4
 
-    WINDOW_HEIGHT = 1000
-    WINDOW_WIDTH = 1100
+    WINDOW_WIDTH = 960
 
     GUI_HEIGHT = (PIXEL_SIZE+2*5)*GUI_SCALE
     GUI_WIDTH = WINDOW_WIDTH
+
+    WINDOW_HEIGHT = 800 + GUI_HEIGHT
+    # TODO to scalovani je podle me jeste vetsi problem, idk
+    # MUSI BYT SPRAVNE ASPECT RATIO !!!
 
     GAME_HEIGHT = WINDOW_HEIGHT - GUI_HEIGHT
     GAME_WIDTH = WINDOW_WIDTH
