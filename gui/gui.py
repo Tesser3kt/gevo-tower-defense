@@ -54,10 +54,10 @@ class Gui():
     def draw_background(self):
         """ Draws the background of the gui"""
         #draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
-        self.background = Surface((Window.GAME_WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1]))
+        self.background = Surface((Window.GUI_WIDTH, Window.GUI_HEIGHT))
         self.background.fill(self.background_color)
 
-        background_object = GameObject(self.position[0], self.position[1], Window.GAME_WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1], self.background)
+        background_object = GameObject(0, 0, Window.GUI_WIDTH, Window.GUI_HEIGHT, self.background)
         self.graphics_manager.draw_object(background_object, self.graphics_manager.canvas_gui)
 
     def create_towers_grid(self):
@@ -76,27 +76,25 @@ class Gui():
         self.lives.add(lives_G)
         self.graphics_manager.draw_group(self.lives, self.background)
 
-
-
-
-    def show_coins(self, screen, coins:int):
+    def show_coins(self, coins:int):
         """ Shows the coins on the screen"""
-        if self.coins_rect:
-            draw.rect(screen, self.background_color, self.coins_rect)
+
         coins_text = self.font.render(f'Coins: {str(coins)}', True, self.color, self.background_color)
-        self.coins_rect = coins_text.get_rect(topleft=self.coins_pos)
-        self.changed_rects.append(self.coins_rect)
-        screen.blit(coins_text, self.coins_pos)
+        coins_rect = coins_text.get_rect(topleft=self.coins_pos)
 
-    def show_wave(self, screen, wave:int):
+        coins_G = GameObject(coins_rect.x, coins_rect.y, coins_rect.width, coins_rect.height, coins_text)
+        self.coins.add(coins_G)
+        self.graphics_manager.draw_group(self.coins, self.background)
+
+
+    def show_wave(self, wave:int):
         """ Shows the wave on the screen"""
-        if self.wave_rect:
-            draw.rect(screen, self.background_color, self.wave_rect)
         wave_text = self.font.render(f'Wave: {str(wave)}', True, self.color, self.background_color)
-        self.wave_rect = wave_text.get_rect(topleft=self.wave_pos)
-        self.changed_rects.append(self.wave_rect)
-        screen.blit(wave_text, self.wave_pos)
+        wave_rect = wave_text.get_rect(topleft=self.wave_pos)
 
+        wave_G = GameObject(wave_rect.x, wave_rect.y, wave_rect.width, wave_rect.height, wave_text)
+        self.coins.add(wave_G)
+        self.graphics_manager.draw_group(self.wave, self.background)
 
 
 

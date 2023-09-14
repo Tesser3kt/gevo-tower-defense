@@ -103,10 +103,10 @@ class GameManager:
 #------------------------------------------------------------------------------------------------------------
 
     def update_gui(self) -> None:
-        self.gui.show_lives(self.graphics_manager.screen, self.lives)
-        self.gui.show_coins(self.graphics_manager.screen, self.coins)
-        self.gui.show_wave(self.graphics_manager.screen, self.wave)
-        self.changed_rects += self.gui.changed_rects
+        self.gui.show_lives(self.lives)
+        self.gui.show_coins(self.coins)
+        self.gui.show_wave(self.wave)
+#        self.changed_rects += self.gui.changed_rects
 
     def update_changed_rects(self) -> None:
         self.graphics_manager.rects_to_update = self.changed_rects
@@ -132,12 +132,18 @@ class GameManager:
 
             for pixel in range(len(self.converted_level[tile])):
                 image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
-                image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))      
+                image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))     
                 rect = self.converted_level[tile][pixel]
+
+                # self.graphics_manager.canvas_game.blit(image, rect) 
+                # self.graphics_manager.screen.blit(self.graphics_manager.canvas_game, (0,0)) 
+                # pg.display.update()
+
+
                 rect = TileObject(x=rect.x, y=rect.y+Window.GUI_HEIGHT, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
                 self.tiles.add(rect)
                 self.static_objects.add(rect)
-        self.graphics_manager.draw_group(self.tiles)
+        self.graphics_manager.draw_group(self.tiles, self.graphics_manager.canvas_game)
                 
                 
 
@@ -327,13 +333,12 @@ class GameManager:
 
         self.init_modules()
         self.initialize()
-        #self.show_map()
+        self.show_map()
         self.gui.create_gui(self.graphics_manager.screen, self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
         frames = 0
         while self.running:
             self.clock.tick(Game.FPS)
-
             self.handle_input()
 
             if self.pause:

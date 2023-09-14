@@ -29,13 +29,23 @@ class GraphicsManager:
         self.rects_to_update.append(canvas.blit(object.image, object.rect))
         logging.debug("Object drawn succesfully.")
 
-    def draw_group(self, group: pg.sprite.RenderUpdates, canvas, background=None) -> None:
+    def draw_group(self, group: pg.sprite.RenderUpdates, game:bool, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
         if background is None:
             background = self.background
-        group.clear(self.screen, background)
-        self.rects_to_update += group.draw(canvas)
+        if game:
+            surface = self.canvas_game
+        else:
+            surface = self.canvas_gui
+        
+        group.clear(surface, background)
+        if game:
+            self.rects_to_update += [pg.Rect(rect.x + Window.GUI_WIDTH, rect.y + Window.GUI_HEIGHT,
+                                             rect.width, rect.height) for rect in group.draw(surface)]
+        else:
+            self.rects_to_update += group.draw(surface)
+
 
     def load_all_textures(self) -> None:
         """Initializates load_all_textures method."""
@@ -55,9 +65,6 @@ class GraphicsManager:
         self.canvas_game = pg.Surface((Window.GAME_WIDTH, Window.GAME_HEIGHT))
         self.canvas_gui = pg.Surface((Window.GUI_WIDTH, Window.GUI_HEIGHT))
 
-        self.screen.blit(self.canvas_game, (Window.GUI_WIDTH, Window.GUI_HEIGHT))
-        self.screen.blit(self.canvas_gui, (0,0))
-
 
         logging.debug("Background created succesfully.")
         logging.debug("Function init_graphics ran succesfully.")
@@ -65,6 +72,8 @@ class GraphicsManager:
     def update(self):
         """ Update screen. """
         logging.debug("screen update function called.")
+        self.screen.blit(self.canvas_game, (Window.GUI_WIDTH, Window.GUI_HEIGHT))
+        self.screen.blit(self.canvas_gui, (0,0))
         pg.display.update(self.rects_to_update)
         self.rects_to_update = []
         logging.debug("Rects_to_update erased.")

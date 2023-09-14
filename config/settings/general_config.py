@@ -44,6 +44,7 @@ class Colors:
     END = (255, 0, 0)
     WALLS_HORIZONTAL = (255, 255, 255)
     WALLS_VERTICAL = (200, 200, 200)
+    WALLS = (255, 255, 255)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
     BUTTONS = (55, 55, 0)
