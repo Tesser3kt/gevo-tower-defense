@@ -1,5 +1,5 @@
 from PIL import Image
-from config.settings.general_config import Tile, Colors, Directory
+from config.settings.general_config import Window, Colors, Directory
 import pygame as pg
 import os
 import logging
@@ -24,7 +24,7 @@ def load_image(level_difficulty: int):
 def create_rect(position: tuple)-> pg.Rect:
     """Create a rect from a color and a position"""
     try:
-        return pg.Rect(position[0], position[1], Tile.PIXEL_SIZE, Tile.PIXEL_SIZE)
+        return pg.Rect(position[0], position[1], Window.PIXEL_SIZE, Window.PIXEL_SIZE)
     except pg.error as e:
         logging.error(f"Level converter -> create_rect(): Cannot create rect from {position}. Error: {e}")
 
@@ -55,8 +55,8 @@ def convert_level(level_difficulty: int)-> dict:
 
     #Process data from image
     for i, pixel in enumerate(pixels):
-        x = i%Tile.WIDTH*Tile.PIXEL_SIZE
-        y = i//Tile.WIDTH*Tile.PIXEL_SIZE
+        x = i%Window.TILES_IN_WIDTH*Window.PIXEL_SIZE
+        y = i//Window.TILES_IN_WIDTH*Window.PIXEL_SIZE
 
         
         #Detect colors

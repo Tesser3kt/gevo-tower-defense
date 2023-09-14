@@ -1,5 +1,5 @@
 from pygame.font import Font
-from config.settings.general_config import Gui_font, Colors, Window, Tile
+from config.settings.general_config import Gui_font, Colors, Window
 from config.settings.towers import *
 from game_objects.game_object import GameObject
 from graphics_manager.graphics_manager import GraphicsManager
@@ -63,7 +63,7 @@ class Gui():
     def create_towers_grid(self):
         """ Creates the grid of tower cards"""
         for tower in range(len(tower_types)):
-            self.towers_pos.append((5+tower*Tile.PIXEL_SIZE*self.gui_scale+5*tower, (self.gui_height-Tile.PIXEL_SIZE*self.gui_scale)//2))
+            self.towers_pos.append((5+tower*Window.PIXEL_SIZE*self.gui_scale+5*tower, (self.gui_height-Window.PIXEL_SIZE*self.gui_scale)//2))
 
     def show_lives(self, lives_c:int):
         """ Shows the lives on the screen"""
@@ -104,8 +104,8 @@ class Gui():
             for index, tower_type in enumerate(tower_types):
                 image_name = tower_type.IMAGE
                 image = textures["game_objects"]["towers"][image_name][0]
-                image = scale(image, (self.gui_scale*Tile.PIXEL_SIZE, self.gui_scale*Tile.PIXEL_SIZE))
-                tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1] , width=self.gui_scale*Tile.PIXEL_SIZE, height=self.gui_scale*Tile.PIXEL_SIZE, image=image)
+                image = scale(image, (self.gui_scale*Window.PIXEL_SIZE, self.gui_scale*Window.PIXEL_SIZE))
+                tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1] , width=self.gui_scale*Window.PIXEL_SIZE, height=self.gui_scale*Window.PIXEL_SIZE, image=image)
                 self.tower_cards.add(tower_card)
             self.graphics_manager.draw_group(self.tower_cards, False, self.background)
 

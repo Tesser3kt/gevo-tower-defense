@@ -1,20 +1,20 @@
 """Configuration file"""
 from config.settings.general_imports import *
 
-class Tile:
-    PIXEL_SIZE = 16
-    HEIGHT = 50 #How many tiles are in height
-    WIDTH = 60 #How many tiles are in width
     # 60T*50T, 1T = 16px
 
 class Window:
+    PIXEL_SIZE = 16
+    TILES_IN_HEIGHT = 50 #How many tiles are in height
+    TILES_IN_WIDTH = 60 #How many tiles are in width
+
     GUI_POS = (0, 0)
     GUI_SCALE = 4
 
     WINDOW_HEIGHT = 1000
     WINDOW_WIDTH = 1100
 
-    GUI_HEIGHT = (Tile.PIXEL_SIZE+2*5)*GUI_SCALE
+    GUI_HEIGHT = (PIXEL_SIZE+2*5)*GUI_SCALE
     GUI_WIDTH = WINDOW_WIDTH
 
     GAME_HEIGHT = WINDOW_HEIGHT - GUI_HEIGHT

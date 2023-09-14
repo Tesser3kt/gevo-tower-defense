@@ -132,7 +132,7 @@ class GameManager:
 
             for pixel in range(len(self.converted_level[tile])):
                 image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
-                image = scale(image, (Tile.PIXEL_SIZE, Tile.PIXEL_SIZE))     
+                image = scale(image, (Window.PIXEL_SIZE, Window.PIXEL_SIZE))     
                 rect = self.converted_level[tile][pixel]
 
                 # self.graphics_manager.canvas_game.blit(image, rect) 
@@ -140,7 +140,7 @@ class GameManager:
                 # pg.display.update()
 
 
-                tile_object = TileObject(x=rect.x, y=rect.y, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
+                tile_object = TileObject(x=rect.x, y=rect.y, width=Window.PIXEL_SIZE, height=Window.PIXEL_SIZE, image=image, type=t_type)
                 self.tiles.add(tile_object)
                 self.static_objects.add(tile_object)
         self.graphics_manager.draw_group(self.tiles, True, self.graphics_manager.canvas_game)
@@ -234,8 +234,8 @@ class GameManager:
 #             self.coins -= tower_dict[tower].PRICE
 #             if tower_dict[tower].TYPE == "projectile":
 #                 x,y = position
-#                 width = Tile.PIXEL_SIZE
-#                 height = Tile.PIXEL_SIZE
+#                 width = Window.PIXEL_SIZE
+#                 height = Window.PIXEL_SIZE
 #                 image = ... # TODO: image
 #                 animation = ... # TODO: animation
 #                 animation_index = ... # TODO: animation index
@@ -251,8 +251,8 @@ class GameManager:
 #                 self.towers.add(tower_object)
 #             elif tower_dict[tower].TYPE == "splash":
 #                 x,y = position
-#                 width = Tile.PIXEL_SIZE
-#                 height = Tile.PIXEL_SIZE
+#                 width = Window.PIXEL_SIZE
+#                 height = Window.PIXEL_SIZE
 #                 image = ... # TODO: image
 #                 animation = ... # TODO: animation
 #                 animation_index = ... # TODO: animation index

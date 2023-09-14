@@ -1,13 +1,13 @@
 """Enemies configuration file"""
 from config.enums.enemy_ability import Ability
-from config.settings.general_config import Tile
+from config.settings.general_config import Window
 
 class Casual:
     """casual enemy"""
     ABILITY = None
     HEALTH = 1
     SPEED = 0.5
-    SIZE = Tile.PIXEL_SIZE
+    SIZE = Window.PIXEL_SIZE
     DETECTABLE = True
     START_LEVEL = 1
 
@@ -21,7 +21,7 @@ class Camo:
     ABILITY = Ability.MASKED
     HEALTH = 3
     SPEED = 0.5
-    SIZE = Tile.PIXEL_SIZE
+    SIZE = Window.PIXEL_SIZE
     DETECTABLE = False
     START_LEVEL = 1
 
@@ -35,7 +35,7 @@ class Speeder:
     ABILITY = Ability.SPEEDER
     HEALTH = 1
     SPEED = 2
-    SIZE = Tile.PIXEL_SIZE
+    SIZE = Window.PIXEL_SIZE
     DETECTABLE = True
     START_LEVEL = 1
 
@@ -49,7 +49,7 @@ class Boss:
     ABILITY = Ability.BOSS
     HEALTH = 25
     SPEED = 0.25
-    SIZE = Tile.PIXEL_SIZE
+    SIZE = Window.PIXEL_SIZE
     DETECTABLE = True
     START_LEVEL = 1
 
@@ -63,7 +63,7 @@ class Bruiser:
     ABILITY = Ability.BRUISER
     HEALTH = 5
     SPEED = 0.5
-    SIZE = Tile.PIXEL_SIZE
+    SIZE = Window.PIXEL_SIZE
     DETECTABLE = True
     START_LEVEL = 1
 

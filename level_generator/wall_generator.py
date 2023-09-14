@@ -1,6 +1,6 @@
 from PIL import Image
 from config.settings.general_config import Colors
-from config.settings.general_config import Tile
+from config.settings.general_config import Window
 from config.settings.wall_generator_config import *
 from random import randint
 
@@ -39,11 +39,11 @@ def generate_walls(img: Image, lvl: int):
     walls_horizontal = []
 
     while len(walls_horizontal) + len(walls_vertical) < NUMBER_OF_WALLS_DICTIONARY[lvl]:
-        x_one = randint(0, Tile.WIDTH - 1)
-        y_one = randint(0, Tile.HEIGHT - 1)
+        x_one = randint(0, Window.TILES_IN_WIDTH - 1)
+        y_one = randint(0, Window.TILES_IN_HEIGHT - 1)
 
-        x_two = randint(0, Tile.WIDTH - 1)
-        y_two = randint(0, Tile.HEIGHT - 1)
+        x_two = randint(0, Window.TILES_IN_WIDTH - 1)
+        y_two = randint(0, Window.TILES_IN_HEIGHT - 1)
         
         y = y_one
         x = x_one
