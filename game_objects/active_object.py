@@ -1,5 +1,6 @@
 from game_objects.game_object import GameObject
 from pygame.surface import Surface
+from pygame.sprite import Sprite
 
 class ActiveObject(GameObject):
     """ Class for objects that do something on their own """
@@ -9,7 +10,7 @@ class ActiveObject(GameObject):
          animation:list[Surface], animation_index:int = 0, lvl:int=1
         ) -> None:
 
-        super().__init__(x,y,width,height,image)
+        GameObject.__init__(self,x,y,width,height,image)
         self.animation=animation
         self.animation_index=animation_index
         self.lvl=lvl
