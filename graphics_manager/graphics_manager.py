@@ -39,9 +39,12 @@ class GraphicsManager:
         else:
             surface = self.canvas_gui
         
+        
         group.clear(surface, background)
+
+        # Move rects down because of GUI
         if game:
-            self.rects_to_update += [pg.Rect(rect.x + Window.GUI_WIDTH, rect.y + Window.GUI_HEIGHT,
+            self.rects_to_update += [pg.Rect(rect.x, rect.y + Window.GUI_HEIGHT,
                                              rect.width, rect.height) for rect in group.draw(surface)]
         else:
             self.rects_to_update += group.draw(surface)
@@ -72,7 +75,7 @@ class GraphicsManager:
     def update(self):
         """ Update screen. """
         logging.debug("screen update function called.")
-        self.screen.blit(self.canvas_game, (Window.GUI_WIDTH, Window.GUI_HEIGHT))
+        self.screen.blit(self.canvas_game, (0, Window.GUI_HEIGHT))
         self.screen.blit(self.canvas_gui, (0,0))
         pg.display.update(self.rects_to_update)
         self.rects_to_update = []

@@ -140,10 +140,10 @@ class GameManager:
                 # pg.display.update()
 
 
-                rect = TileObject(x=rect.x, y=rect.y+Window.GUI_HEIGHT, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
-                self.tiles.add(rect)
-                self.static_objects.add(rect)
-        self.graphics_manager.draw_group(self.tiles, self.graphics_manager.canvas_game)
+                tile_object = TileObject(x=rect.x, y=rect.y, width=Tile.PIXEL_SIZE, height=Tile.PIXEL_SIZE, image=image, type=t_type)
+                self.tiles.add(tile_object)
+                self.static_objects.add(tile_object)
+        self.graphics_manager.draw_group(self.tiles, True, self.graphics_manager.canvas_game)
                 
                 
 
@@ -293,6 +293,7 @@ class GameManager:
         rectangle.y -= 2
         rectangle.width += 4
         rectangle.height += 4
+        return True
 
 # #------------------------------------------------------------------------------------------------------------
 # #------------------------------------------------------------------------------------------------------------
@@ -310,8 +311,8 @@ class GameManager:
                 if event.key == pg.K_ESCAPE:
                     self.pause = not self.pause
                     self.gui.pause_text(self.graphics_manager.screen, self.pause)
-                elif event.key == pg.MOUSEBUTTONDOWN and event.button == 1:
-                    self.handle_card_click()
+            elif (event.type == pg.MOUSEBUTTONDOWN and event.button == 1) and self.handle_card_click():
+                print("clicked") #TODO: move tower to the map and buy it
 
 
 
@@ -334,7 +335,8 @@ class GameManager:
         self.init_modules()
         self.initialize()
         self.show_map()
-        self.gui.create_gui(self.graphics_manager.screen, self.lives, self.coins, self.wave, self.graphics_manager.textures)
+
+        self.gui.create_gui(self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
         frames = 0
         while self.running:

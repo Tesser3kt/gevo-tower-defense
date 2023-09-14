@@ -7,12 +7,12 @@ class Tile:
     WIDTH = 60 #How many tiles are in width
     # 60T*50T, 1T = 16px
 
-class Window:  
+class Window:
     GUI_POS = (0, 0)
     GUI_SCALE = 4
 
     WINDOW_HEIGHT = 1000
-    WINDOW_WIDTH = 960
+    WINDOW_WIDTH = 1100
 
     GUI_HEIGHT = (Tile.PIXEL_SIZE+2*5)*GUI_SCALE
     GUI_WIDTH = WINDOW_WIDTH

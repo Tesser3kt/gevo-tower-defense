@@ -41,7 +41,7 @@ class Gui():
 
         self.tower_cards = RenderUpdates()
 
-    def create_gui(self, screen, lives:int, coins:int, wave:int, textures:dict):
+    def create_gui(self, lives:int, coins:int, wave:int, textures:dict):
         """ Creates the gui"""
         self.draw_background()
         self.show_lives(lives)
@@ -74,7 +74,7 @@ class Gui():
 
         lives_G = GameObject(lives_rect.x, lives_rect.y, lives_rect.width, lives_rect.height, lives_text)
         self.lives.add(lives_G)
-        self.graphics_manager.draw_group(self.lives, self.background)
+        self.graphics_manager.draw_group(self.lives, False, self.background)
 
     def show_coins(self, coins:int):
         """ Shows the coins on the screen"""
@@ -84,7 +84,7 @@ class Gui():
 
         coins_G = GameObject(coins_rect.x, coins_rect.y, coins_rect.width, coins_rect.height, coins_text)
         self.coins.add(coins_G)
-        self.graphics_manager.draw_group(self.coins, self.background)
+        self.graphics_manager.draw_group(self.coins, False, self.background)
 
 
     def show_wave(self, wave:int):
@@ -94,7 +94,7 @@ class Gui():
 
         wave_G = GameObject(wave_rect.x, wave_rect.y, wave_rect.width, wave_rect.height, wave_text)
         self.coins.add(wave_G)
-        self.graphics_manager.draw_group(self.wave, self.background)
+        self.graphics_manager.draw_group(self.wave, False, self.background)
 
 
 
@@ -107,10 +107,10 @@ class Gui():
                 image = scale(image, (self.gui_scale*Tile.PIXEL_SIZE, self.gui_scale*Tile.PIXEL_SIZE))
                 tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1] , width=self.gui_scale*Tile.PIXEL_SIZE, height=self.gui_scale*Tile.PIXEL_SIZE, image=image)
                 self.tower_cards.add(tower_card)
-            self.graphics_manager.draw_group(self.tower_cards, self.background)
+            self.graphics_manager.draw_group(self.tower_cards, False, self.background)
 
 
-
+### PREDELAT
     def pause_text(self, screen, pause:bool):
         """ Shows the pause on the screen"""
         if self.pause_rect:
