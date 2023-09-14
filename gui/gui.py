@@ -25,7 +25,7 @@ class Gui():
         self.gui_scale = Window.GUI_SCALE
 
         self.gui_height = Window.GUI_HEIGHT
-        self.gui_width = Window.WIDTH
+        self.gui_width = Window.GAME_WIDTH
         self.center_for_text = (self.gui_height-self.font_size)//2
         # Tohle bude chtit algoritmus na automaticke zarovnani
         self.lives_pos = (self.gui_width-100, self.center_for_text)
@@ -44,36 +44,36 @@ class Gui():
     def create_gui(self, screen, lives:int, coins:int, wave:int, textures:dict):
         """ Creates the gui"""
         self.draw_background()
-        self.show_lives(screen, lives)
-        self.show_coins(screen, coins)
-        self.show_wave(screen, wave)
-        self.show_towers(screen, textures)
+        self.show_lives(lives)
+        self.show_coins(coins)
+        self.show_wave(wave)
+        self.show_towers(textures)
 
 
 
     def draw_background(self):
         """ Draws the background of the gui"""
         #draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
-        self.background = Surface((Window.WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1]))
+        self.background = Surface((Window.GAME_WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1]))
         self.background.fill(self.background_color)
 
-        background_object = GameObject(self.position[0], self.position[1], Window.WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1], self.background)
-        self.graphics_manager.draw_object(background_object)
+        background_object = GameObject(self.position[0], self.position[1], Window.GAME_WIDTH-self.position[0], Window.GUI_HEIGHT-self.position[1], self.background)
+        self.graphics_manager.draw_object(background_object, self.graphics_manager.canvas_gui)
 
     def create_towers_grid(self):
         """ Creates the grid of tower cards"""
         for tower in range(len(tower_types)):
             self.towers_pos.append((5+tower*Tile.PIXEL_SIZE*self.gui_scale+5*tower, (self.gui_height-Tile.PIXEL_SIZE*self.gui_scale)//2))
 
-    def show_lives(self, lives:int):
+    def show_lives(self, lives_c:int):
         """ Shows the lives on the screen"""
 
         # Create the new text
-        lives_text = self.font.render(f'Lives: {str(lives)}', True, self.color, self.background_color)
+        lives_text = self.font.render(f'Lives: {str(lives_c)}', True, self.color, self.background_color)
         lives_rect = lives_text.get_rect(topleft=self.lives_pos)
 
-        lives = GameObject(lives_rect.x, lives_rect.y, lives_rect.width, lives_rect.height, lives_text)
-        self.lives.add(lives)
+        lives_G = GameObject(lives_rect.x, lives_rect.y, lives_rect.width, lives_rect.height, lives_text)
+        self.lives.add(lives_G)
         self.graphics_manager.draw_group(self.lives, self.background)
 
 
@@ -119,7 +119,7 @@ class Gui():
             draw.rect(screen, self.background_color, self.pause_rect)
         if pause:
             pause_text = self.font.render(f'PAUSE', True, self.color, self.background_color)
-            self.pause_rect = pause_text.get_rect(center=(Window.WIDTH//2, Window.GUI_HEIGHT//2))
+            self.pause_rect = pause_text.get_rect(center=(Window.GAME_WIDTH//2, Window.GUI_HEIGHT//2))
             screen.blit(pause_text, self.pause_rect)
             display.update(self.pause_rect)
 

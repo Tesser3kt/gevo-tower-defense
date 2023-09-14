@@ -16,23 +16,26 @@ class GraphicsManager:
         self.textures: dict = {}
         self.background: pg.Surface = None
         self.rects_to_update = []
+
+        self.canvas_game: pg.Surface = None
+        self.canvas_gui: pg.Surface = None
         logging.debug("GraphicsManager class initializer ran succesfully.")
 
-    def draw_object(self, object: GameObject, background=None) -> None:
+    def draw_object(self, object: GameObject, canvas, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
         if background is None:
             background = self.background
-        self.rects_to_update.append(self.screen.blit(object.image, object.rect))
+        self.rects_to_update.append(canvas.blit(object.image, object.rect))
         logging.debug("Object drawn succesfully.")
 
-    def draw_group(self, group: pg.sprite.RenderUpdates, background=None) -> None:
+    def draw_group(self, group: pg.sprite.RenderUpdates, canvas, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
         if background is None:
             background = self.background
         group.clear(self.screen, background)
-        self.rects_to_update += group.draw(self.screen)
+        self.rects_to_update += group.draw(canvas)
 
     def load_all_textures(self) -> None:
         """Initializates load_all_textures method."""
@@ -42,12 +45,20 @@ class GraphicsManager:
     def init_graphics(self) -> None:
         """ Initializate graphics. """
         logging.debug("Function init_graphics called.")
-        self.screen = pg.display.set_mode((Window.WIDTH, Window.HEIGHT), pg.SCALED)    #creating window
+        self.screen = pg.display.set_mode((Window.WINDOW_WIDTH, Window.WINDOW_HEIGHT), pg.SCALED)    #creating window
         logging.info("Window initialized succesfully.")
 
         self.background = pg.Surface(self.screen.get_size())       #defining background
         self.background.fill(Colors.BACKGROUND)     #filling background with colour
-        self.background = self.background.convert()     #converting background
+        self.background = self.background.convert()  #converting background
+        
+        self.canvas_game = pg.Surface((Window.GAME_WIDTH, Window.GAME_HEIGHT))
+        self.canvas_gui = pg.Surface((Window.GUI_WIDTH, Window.GUI_HEIGHT))
+
+        self.screen.blit(self.canvas_game, (Window.GUI_WIDTH, Window.GUI_HEIGHT))
+        self.screen.blit(self.canvas_gui, (0,0))
+
+
         logging.debug("Background created succesfully.")
         logging.debug("Function init_graphics ran succesfully.")
 

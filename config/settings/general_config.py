@@ -10,10 +10,15 @@ class Tile:
 class Window:  
     GUI_POS = (0, 0)
     GUI_SCALE = 4
-    GUI_HEIGHT = (Tile.PIXEL_SIZE+2*5)*GUI_SCALE
 
-    HEIGHT = 800 + GUI_HEIGHT
-    WIDTH = 960
+    WINDOW_HEIGHT = 1000
+    WINDOW_WIDTH = 960
+
+    GUI_HEIGHT = (Tile.PIXEL_SIZE+2*5)*GUI_SCALE
+    GUI_WIDTH = WINDOW_WIDTH
+
+    GAME_HEIGHT = WINDOW_HEIGHT - GUI_HEIGHT
+    GAME_WIDTH = WINDOW_WIDTH
 
 class Directory:
     BASE_DIR = os.getcwd()

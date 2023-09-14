@@ -85,7 +85,7 @@ class GameManager:
         """ Initialize some modules"""
         font.init()
         self.graphics_manager = GraphicsManager()
-        self.gui = Gui()
+        self.gui = Gui(self.graphics_manager)
 
     def initialize(self):
         """ Initialize game"""
