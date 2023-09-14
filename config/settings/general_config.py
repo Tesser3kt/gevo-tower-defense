@@ -42,9 +42,10 @@ class Colors:
     PATH = (255, 255, 0)
     START = (0, 255, 0)
     END = (255, 0, 0)
-    WALLS = (255, 255, 255)
-    MENU_BG = (55, 25, 25)
-    MENU_TEXT = (25, 25, 55)
+    WALLS_HORIZONTAL = (255, 255, 255)
+    WALLS_VERTICAL = (200, 200, 200)
+    MENU_BG = (0, 0, 255)
+    MENU_TEXT = (255, 0, 255)
     BUTTONS = (55, 55, 0)
 
 class Difficulty:

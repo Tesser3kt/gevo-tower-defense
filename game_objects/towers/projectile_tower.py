@@ -14,7 +14,7 @@ class ProjectileTower(TowerObject):
      animation_index: int = 0, lvl:int=1
     )->None:
 
-        TowerObject.__init__(x,y,width,height,image,animation,damage,reload_time,tower_type,animation_index,lvl)
+        TowerObject.__init__(self,x,y,width,height,image,animation,damage,reload_time,tower_type,animation_index,lvl)
 
         self.projectile_animation=projectile_animation
 
