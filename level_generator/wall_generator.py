@@ -38,7 +38,7 @@ def generate_walls(img: Image, lvl: int):
     walls_vertical = []
     walls_horizontal = []
 
-    while len(walls_horizontal) + len(walls_vertical) < NUMBER_OF_WALLS_DICTIONARY[lvl]:
+    while len(walls_horizontal) < NUMBER_OF_WALLS_DICTIONARY[lvl]:
         x_one = randint(0, Tile.WIDTH - 1)
         y_one = randint(0, Tile.HEIGHT - 1)
 
