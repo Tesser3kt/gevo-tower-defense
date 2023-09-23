@@ -19,7 +19,7 @@ class Gui():
         self.background_color = Colors.MENU_BG
 
         self.background = None
-
+        self.changed_rects = []
 
         self.font = Font(self.path, self.font_size)
         self.gui_scale = Window.GUI_SCALE
@@ -34,12 +34,15 @@ class Gui():
 
         self.lives = RenderUpdates()
         self.coins = RenderUpdates()
+        self.old_coins_text = None
         self.wave = RenderUpdates()
         self.pause = RenderUpdates()
 
         self.towers_pos = []
+        self.tower_pos_types = []
 
         self.tower_cards = RenderUpdates()
+
 
     def create_gui(self, lives:int, coins:int, wave:int, textures:dict):
         """ Creates the gui"""
@@ -50,7 +53,6 @@ class Gui():
         self.show_towers(textures)
 
 
-
     def draw_background(self):
         """ Draws the background of the gui"""
         #draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
@@ -58,13 +60,17 @@ class Gui():
         self.background.fill(self.background_color)
 
         background_object = GameObject(0, 0, Window.GUI_WIDTH, Window.GUI_HEIGHT, self.background)
-        self.graphics_manager.draw_object(background_object, self.graphics_manager.canvas_gui)
+        self.graphics_manager.draw_object(background_object, False)
+
 
     def create_towers_grid(self):
         """ Creates the grid of tower cards"""
-        for tower in range(len(tower_types)):
-            self.towers_pos.append((5+tower*Window.PIXEL_SIZE*self.gui_scale+5*tower, (self.gui_height-Window.PIXEL_SIZE*self.gui_scale)//2))
+        for tower, tower_type in enumerate(tower_types):
+            position = (Window.CARD_RECT_WIDTH+tower*Window.PIXEL_SIZE*self.gui_scale+tower*Window.CARD_RECT_WIDTH, (self.gui_height-Window.PIXEL_SIZE*self.gui_scale)//2)
+            self.towers_pos.append(position)
+            self.tower_pos_types.append((position, tower_type))
 
+    # Tady u těch textů je problém, že když se zkrátí, tak to staré tam pořád je. Například u coinů když se dostaneme z 1000 na 750, tak to ukazuje 7500 protoze tam na konci je ta sratá 0
     def show_lives(self, lives_c:int):
         """ Shows the lives on the screen"""
 
@@ -76,12 +82,12 @@ class Gui():
         self.lives.add(lives_G)
         self.graphics_manager.draw_group(self.lives, False, self.background)
 
+
     def show_coins(self, coins:int):
         """ Shows the coins on the screen"""
-
         coins_text = self.font.render(f'Coins: {str(coins)}', True, self.color, self.background_color)
         coins_rect = coins_text.get_rect(topleft=self.coins_pos)
-
+        self.old_coins_text = coins_rect
         coins_G = GameObject(coins_rect.x, coins_rect.y, coins_rect.width, coins_rect.height, coins_text)
         self.coins.add(coins_G)
         self.graphics_manager.draw_group(self.coins, False, self.background)
@@ -97,7 +103,6 @@ class Gui():
         self.graphics_manager.draw_group(self.wave, False, self.background)
 
 
-
     def show_towers(self, textures:dict):
             """ Shows the towers on the screen"""
             self.create_towers_grid()
@@ -105,12 +110,11 @@ class Gui():
                 image_name = tower_type.IMAGE
                 image = textures["game_objects"]["towers"][image_name][0]
                 image = scale(image, (self.gui_scale*Window.PIXEL_SIZE, self.gui_scale*Window.PIXEL_SIZE))
-                tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1] , width=self.gui_scale*Window.PIXEL_SIZE, height=self.gui_scale*Window.PIXEL_SIZE, image=image)
+                tower_card = GameObject(self.towers_pos[index][0],self.towers_pos[index][1], width=self.gui_scale*Window.PIXEL_SIZE, height=self.gui_scale*Window.PIXEL_SIZE, image=image)
                 self.tower_cards.add(tower_card)
             self.graphics_manager.draw_group(self.tower_cards, False, self.background)
 
-
-### PREDELAT
+### PREDELAT, neni hotove
     def pause_text(self, screen, pause:bool):
         """ Shows the pause on the screen"""
         if self.pause_rect:
@@ -119,9 +123,7 @@ class Gui():
             pause_text = self.font.render(f'PAUSE', True, self.color, self.background_color)
             self.pause_rect = pause_text.get_rect(center=(Window.GAME_WIDTH//2, Window.GUI_HEIGHT//2))
             screen.blit(pause_text, self.pause_rect)
-            display.update(self.pause_rect)
-
-
+            display.update(self.pause_rect) #TODO
 
     def change_size(self, size:int):
         """ Changes the size of the gui. Size is a multiplier of the original size"""
@@ -132,7 +134,3 @@ class Gui():
     def change_color(self, color:tuple):
         """ Changes the color of the font in gui"""
         self.color = color
-
-
-    def draw_rectangle(self, screen):
-        pass

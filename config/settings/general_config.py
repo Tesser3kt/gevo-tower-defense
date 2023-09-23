@@ -10,6 +10,7 @@ class Window:
 
     GUI_POS = (0, 0)
     GUI_SCALE = 4
+    CARD_RECT_WIDTH = 4
 
     WINDOW_WIDTH = 960
 
@@ -29,7 +30,7 @@ class Directory:
     EXCLUDED_DIRS = ["fonts", "level_maps"] #for texture_loader
     
 class Economy:
-    STARTING_MONEY = 100
+    STARTING_MONEY = 4000
     STARTING_LIVES = 10
     MONEY_PER_KILL = 10
     MONEY_PER_HIT = 1
@@ -50,7 +51,7 @@ class Colors:
     WALLS = (255, 255, 255)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
-    BUTTONS = (55, 55, 0)
+    BUTTONS = (255, 255, 0)
 
 class Difficulty:
     NOOB = 0

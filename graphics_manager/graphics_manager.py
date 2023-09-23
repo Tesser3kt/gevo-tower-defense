@@ -21,15 +21,7 @@ class GraphicsManager:
         self.canvas_gui: pg.Surface = None
         logging.debug("GraphicsManager class initializer ran succesfully.")
 
-    def draw_object(self, object: GameObject, canvas, background=None) -> None:
-        """ Draws object.image texture on object.rect place."""
-        logging.debug(" draw_object method of GraphicsManager called succesfully.")
-        if background is None:
-            background = self.background
-        self.rects_to_update.append(canvas.blit(object.image, object.rect))
-        logging.debug("Object drawn succesfully.")
-
-    def draw_group(self, group: pg.sprite.RenderUpdates, game:bool, background=None) -> None:
+    def draw_object(self, object: GameObject, game:bool, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
         if background is None:
@@ -38,7 +30,23 @@ class GraphicsManager:
             surface = self.canvas_game
         else:
             surface = self.canvas_gui
-        
+
+        if game:
+            self.rects_to_update.append(surface.blit(object.image, (object.rect.x, object.rect.y)))
+        else:
+            self.rects_to_update.append(surface.blit(object.image, object.rect))
+
+        logging.debug("Object drawn succesfully.")
+
+    def draw_group(self, group: pg.sprite.RenderUpdates, game:bool, background=None) -> None:
+        """ Draws object.image texture on object.rect place."""
+        logging.debug(" draw_group method of GraphicsManager called succesfully.")
+        if background is None:
+            background = self.background
+        if game:
+            surface = self.canvas_game
+        else:
+            surface = self.canvas_gui
         
         group.clear(surface, background)
 
@@ -48,6 +56,23 @@ class GraphicsManager:
                                              rect.width, rect.height) for rect in group.draw(surface)]
         else:
             self.rects_to_update += group.draw(surface)
+
+        logging.debug("Group drawn succesfully.")
+
+    def draw_rect(self, rect: pg.Rect, color: tuple, game:bool, background=None, width=Window.CARD_RECT_WIDTH) -> None:
+        """ Draws rect on screen. """
+        logging.debug(" draw_rect method of GraphicsManager called succesfully.")
+        if background is None:
+            background = self.background
+        if game:
+            surface = self.canvas_game
+        else:
+            surface = self.canvas_gui
+
+        pg.draw.rect(surface, color, rect, width)
+        self.rects_to_update.append(rect)
+
+        logging.debug("Rect drawn succesfully.")
 
 
     def load_all_textures(self) -> None:
