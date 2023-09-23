@@ -1,22 +1,36 @@
 """Configuration file"""
 from config.settings.general_imports import *
 
-class Window:  
-    HEIGHT = 800
-    WIDTH = 960
-
-class Tile:
-    PIXEL_SIZE = 16
-    HEIGHT = 50 #How many tiles are in height
-    WIDTH = 60 #How many tiles are in width
     # 60T*50T, 1T = 16px
+
+class Window:
+    PIXEL_SIZE = 16
+    TILES_IN_HEIGHT = 50 #How many tiles are in height
+    TILES_IN_WIDTH = 60 #How many tiles are in width
+
+    GUI_POS = (0, 0)
+    GUI_SCALE = 4
+    CARD_RECT_WIDTH = 4
+
+    WINDOW_WIDTH = 960
+
+    GUI_HEIGHT = (PIXEL_SIZE+2*5)*GUI_SCALE
+    GUI_WIDTH = WINDOW_WIDTH
+
+    WINDOW_HEIGHT = 800 + GUI_HEIGHT
+    # TODO to scalovani je podle me jeste vetsi problem, idk
+    # MUSI BYT SPRAVNE ASPECT RATIO !!!
+
+    GAME_HEIGHT = WINDOW_HEIGHT - GUI_HEIGHT
+    GAME_WIDTH = WINDOW_WIDTH
 
 class Directory:
     BASE_DIR = os.getcwd()
     ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+    EXCLUDED_DIRS = ["fonts", "level_maps"] #for texture_loader
     
 class Economy:
-    STARTING_MONEY = 100
+    STARTING_MONEY = 4000
     STARTING_LIVES = 10
     MONEY_PER_KILL = 10
     MONEY_PER_HIT = 1
@@ -34,9 +48,10 @@ class Colors:
     END = (255, 0, 0)
     WALLS_HORIZONTAL = (255, 255, 255)
     WALLS_VERTICAL = (200, 200, 200)
+    WALLS = (255, 255, 255)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
-    BUTTONS = (55, 55, 0)
+    BUTTONS = (255, 255, 0)
 
 class Difficulty:
     NOOB = 0
@@ -150,3 +165,8 @@ class Wave_difficulty:
         Difficulty.HARDER : Harder_wave.harder_wave,
         Difficulty.IMPOSSIBLE : Impossible_wave.impossible_wave
     }
+
+
+class Gui_font:
+    size = 20
+    path = os.path.join(Directory.ASSETS_DIR, "fonts", "UbuntuNerdFont-Bold.ttf")

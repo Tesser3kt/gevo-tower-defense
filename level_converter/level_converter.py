@@ -1,5 +1,5 @@
 from PIL import Image
-from config.settings.general_config import Tile, Colors, Directory
+from config.settings.general_config import Window, Colors, Directory
 import pygame as pg
 import os
 import logging
@@ -24,7 +24,7 @@ def load_image(level_difficulty: int):
 def create_rect(position: tuple)-> pg.Rect:
     """Create a rect from a color and a position"""
     try:
-        return pg.Rect(position[0], position[1], Tile.PIXEL_SIZE, Tile.PIXEL_SIZE)
+        return pg.Rect(position[0], position[1], Window.PIXEL_SIZE, Window.PIXEL_SIZE)
     except pg.error as e:
         logging.error(f"Level converter -> create_rect(): Cannot create rect from {position}. Error: {e}")
 
@@ -55,57 +55,29 @@ def convert_level(level_difficulty: int)-> dict:
 
     #Process data from image
     for i, pixel in enumerate(pixels):
-        x = i%Tile.WIDTH*Tile.PIXEL_SIZE
-        y = i//Tile.WIDTH*Tile.PIXEL_SIZE
+        x = i%Window.TILES_IN_WIDTH*Window.PIXEL_SIZE
+        y = i//Window.TILES_IN_WIDTH*Window.PIXEL_SIZE
 
         
         #Detect colors
         if pixel == Colors.WALLS:
             square = create_rect((x, y))
             walls_rect.append(square)
-            #pg.draw.rect(screen, (0, 0, 255),  square)
         elif pixel == Colors.PATH:
             square = create_rect((x, y))
             path_rect.append(square)
-            #pg.draw.rect(screen, (255, 255,0),  square)
         elif pixel == Colors.START:
             square = create_rect((x, y))
             start_rect.append(square)
-            #pg.draw.rect(screen, (0, 255, 0),  square)
         elif pixel == Colors.END:
             square = create_rect((x, y))
             end_rect.append(square)
-            #pg.draw.rect(screen, (255, 0, 0),  square)
-            #print("amoooooooooooooogus")
         elif pixel == Colors.BACKGROUND:
             square = create_rect((x, y))
             free_tile_rect.append(square)
-            #pg.draw.rect(screen, (55, 55, 50),  square)
         else:
             logging.error(f"Level converter: Unknown color: {pixel}")
             print("Unknown color")
 
 
     return tiles
-   #    -----------------------------------------------------------------------------
-   #    -----------------------------------------------------------------------------
-   #    -----------------------------------TESTING-----------------------------------
-   #    -----------------------------------------------------------------------------
-   #    -----------------------------------------------------------------------------
-   #
-
-   # print((len(tiles["free_tile"])+ len(tiles["path"])+ len(tiles["start"])+ len(tiles["walls"]) + len(tiles["end"])))
-    #print(tiles["end"], "end")
-    #while True:
-    #    for event in pg.event.get():
-    #        if event.type == pg.QUIT:
-    #            pg.quit()
-    #            quit()
-
-        
-        #for j, tile in enumerate(tiles.values()):
-         #   for i, rect in enumerate(tile):
-          #      pg.draw.rect(screen, ((j+1)*10, (j+1)*50, (j+1)*50) , rect)
-                #print("yes") if rect.x == 0 and rect.y == 0 else None
-
-        #pg.display.update()

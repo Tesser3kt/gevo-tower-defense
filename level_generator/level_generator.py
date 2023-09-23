@@ -13,7 +13,7 @@ def first_direction(start_point:tuple[int]) -> Direction:
     x, y = start_point
     if x == 0:
         return Direction.RIGHT
-    elif x == Tile.WIDTH-1:
+    elif x == Window.TILES_IN_WIDTH-1:
         return Direction.LEFT
     elif y == 0:
         return Direction.DOWN
@@ -49,11 +49,11 @@ def pref_directions(start_point:tuple[int]) -> list[Direction]:
     """"Return preferable directions from start point"""
     x, y = start_point
     pref_directions =[]
-    if x > Tile.WIDTH//2:
+    if x > Window.TILES_IN_WIDTH//2:
         pref_directions.append(Direction.LEFT.value)
     else:
         pref_directions += [Direction.RIGHT.value]
-    if y > Tile.HEIGHT//2:
+    if y > Window.TILES_IN_HEIGHT//2:
         pref_directions += [Direction.UP.value]
     else:
         pref_directions += [Direction.DOWN.value]
@@ -95,16 +95,16 @@ def move_to(rnd_direction:Direction, x:int, y:int) -> tuple:
 def end_points(start_point:tuple)->list[tuple]:
     """Creates a list of coords of legal end points"""
     if start_point[0] == 0:
-        return [(Tile.WIDTH-1, y) for y in range(Tile.HEIGHT)]
+        return [(Window.TILES_IN_WIDTH-1, y) for y in range(Window.TILES_IN_HEIGHT)]
     elif start_point[1] == 0:
-        return [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)]
-    elif start_point[0] == Tile.WIDTH-1:
-        return [(0, y) for y in range(Tile.HEIGHT)]
+        return [(x, Window.TILES_IN_HEIGHT-1) for x in range(Window.TILES_IN_WIDTH)]
+    elif start_point[0] == Window.TILES_IN_WIDTH-1:
+        return [(0, y) for y in range(Window.TILES_IN_HEIGHT)]
     else:
-        return [(x, 0) for x in range(Tile.WIDTH)]
+        return [(x, 0) for x in range(Window.TILES_IN_WIDTH)]
 
 def legal_move(x:int, y:int):
-    return 0<=x<Tile.WIDTH and 0<=y<Tile.HEIGHT
+    return 0<=x<Window.TILES_IN_WIDTH and 0<=y<Window.TILES_IN_HEIGHT
 
 def generate_level(lvl:int):
     """Generate a level"""
@@ -118,22 +118,22 @@ def generate_level(lvl:int):
         Direction.RIGHT.value: 250
     }
 
-    img = Image.new('RGB', (Tile.WIDTH, Tile.HEIGHT), color = (0, 0, 0))
+    img = Image.new('RGB', (Window.TILES_IN_WIDTH, Window.TILES_IN_HEIGHT), color = Colors.BACKGROUND)
 
     #Vytvoří random start na random ose a pak vybere 1 start 
-    start_osa_1 = 0, random.randint(5, Tile.HEIGHT-5)
-    start_osa_2 = random.randint(5, Tile.WIDTH-5), 0
-    start_osa_3 = Tile.WIDTH-1, random.randint(5, Tile.HEIGHT-5)
-    start_osa_4 = random.randint(5, Tile.WIDTH-5), Tile.HEIGHT-1
+    start_osa_1 = 0, random.randint(5, Window.TILES_IN_HEIGHT-5)
+    start_osa_2 = random.randint(5, Window.TILES_IN_WIDTH-5), 0
+    start_osa_3 = Window.TILES_IN_WIDTH-1, random.randint(5, Window.TILES_IN_HEIGHT-5)
+    start_osa_4 = random.randint(5, Window.TILES_IN_WIDTH-5), Window.TILES_IN_HEIGHT-1
     #Vybraný start
     chosen_start = random.choice([start_osa_1, start_osa_2, start_osa_3, start_osa_4])
 
     # Define the border pixels
     #border_pixels = set(
-    #    [(x, 0) for x in range(Tile.WIDTH)] + 
-    #    [(x, Tile.HEIGHT-1) for x in range(Tile.WIDTH)] + 
-    #    [(0, y) for y in range(1, Tile.HEIGHT-1)] + 
-    #    [(Tile.WIDTH-1, y) for y in range(1, Tile.HEIGHT-1)]
+    #    [(x, 0) for x in range(Window.WIDTH)] + 
+    #    [(x, Window.HEIGHT-1) for x in range(Window.WIDTH)] + 
+    #    [(0, y) for y in range(1, Window.HEIGHT-1)] + 
+    #    [(Window.WIDTH-1, y) for y in range(1, Window.HEIGHT-1)]
     #)
 
     #Start direction
