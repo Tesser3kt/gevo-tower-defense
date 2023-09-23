@@ -272,13 +272,11 @@ class GameManager:
             for tile in sus_tiles:
                 the_tiles += [o for o in self.default_tiles if o.rect.topleft == tile]
                 if len(the_tiles) == 16:
-                    print("succes")
                     for a_tile in the_tiles:
                         self.default_tiles.remove(a_tile)
                         self.occupied_tiles.add(a_tile)
                         a_tile.type = TileType.OCCUPIED
                 elif tile in [o.rect.topleft for o in self.occupied_tiles]:
-                    print("occupied")
                     tower_object.kill()
                     return False
                 elif tile in [o.rect.topleft for o in self.towers]:
