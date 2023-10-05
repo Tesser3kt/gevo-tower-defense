@@ -54,7 +54,6 @@ class GameManager:
         self.occupied_tiles = RenderUpdates()
         self.default_tiles = RenderUpdates()
         self.wall_tiles = RenderUpdates()
-        self.the_tower = RenderUpdates()
 
 
         self.moving_objects = RenderUpdates()
@@ -238,7 +237,6 @@ class GameManager:
     def buy_tower(self, tower:TowerType, position:tuple) -> TowerObject:
         """ Buy tower and place it on map. Also check if the position is valid"""
         if self.coins >= tower.COST:
-            self.the_tower.empty()
 
             x,y = position
             width = Window.PIXEL_SIZE*4
@@ -264,6 +262,7 @@ class GameManager:
             
 
             sus_tiles = []
+            # Sus tiles are all tiles under Tower Object 
             for x in range(tower_object.rect.width//Window.PIXEL_SIZE):
                 for y in range(tower_object.rect.height//Window.PIXEL_SIZE):
                     sus_tiles.append((tower_object.rect.x+x*Window.PIXEL_SIZE,tower_object.rect.y+y*Window.PIXEL_SIZE))
@@ -271,7 +270,7 @@ class GameManager:
             the_tiles = []
             for tile in sus_tiles:
                 the_tiles += [o for o in self.default_tiles if o.rect.topleft == tile]
-                if len(the_tiles) == 16:
+                if len(the_tiles) == Window.CARD_RECT_WIDTH**2:
                     for a_tile in the_tiles:
                         self.default_tiles.remove(a_tile)
                         self.occupied_tiles.add(a_tile)
@@ -286,7 +285,7 @@ class GameManager:
                     tower_object.kill()
                     return False
                 elif tile == sus_tiles[-1]:
-                    print("Something weird happened")
+                    logging.error("Nezna tile type, nemuze zkontrolovat co je pod towerkou")
                     tower_object.kill()
                     return False
                 # SEM SE TO NORMALNE NEMUZE DOSTAT, JENOM KDYZ TO BUDE NEJAKY NOVY TILE TYPE
@@ -316,7 +315,6 @@ class GameManager:
         clicked_cards = [card for card in self.gui.tower_cards if card.rect.collidepoint(pg.mouse.get_pos())]
         if not clicked_cards:
             return
-        self.clicked_card = None
         clicked_card = clicked_cards[0]
         rectangle = clicked_card.rect.copy()
         rectangle.x -= Window.CARD_RECT_WIDTH
@@ -325,9 +323,9 @@ class GameManager:
         rectangle.height += 2*Window.CARD_RECT_WIDTH
         self.clicked_card = clicked_card, rectangle
 
-        for type in self.gui.tower_pos_types:
-            if type[0] == self.clicked_card[0].rect.topleft:
-                self.clicked_tower_type = type[1]
+        for rect, type in self.gui.tower_pos_types:
+            if rect == self.clicked_card[0].rect.topleft:
+                self.clicked_tower_type = type
 
         return True
     

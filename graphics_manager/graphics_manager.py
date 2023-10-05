@@ -24,7 +24,7 @@ class GraphicsManager:
     def draw_object(self, object: GameObject, game:bool, background=None) -> None:
         """ Draws object.image texture on object.rect place."""
         logging.debug(" draw_object method of GraphicsManager called succesfully.")
-        if background is None:
+        if not background:
             background = self.background
         if game:
             surface = self.canvas_game
