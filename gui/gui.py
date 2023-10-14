@@ -19,24 +19,17 @@ class Gui():
         self.background_color = Colors.MENU_BG
 
         self.background = None
-        self.changed_rects = []
 
         self.font = Font(self.path, self.font_size)
+        self.small_font = Font(self.path, self.font_size//2)
         self.gui_scale = Window.GUI_SCALE
 
         self.gui_height = Window.GUI_HEIGHT
         self.gui_width = Window.GAME_WIDTH
         self.center_for_text = (self.gui_height-self.font_size)//2
         # Tohle bude chtit algoritmus na automaticke zarovnani
-        self.lives_pos = (self.gui_width-100, self.center_for_text)
-        self.coins_pos = (self.gui_width-230, self.center_for_text)
-        self.wave_pos = (self.gui_width-320, self.center_for_text)
-
-        self.lives = RenderUpdates()
-        self.coins = RenderUpdates()
-        self.old_coins_text = None
-        self.wave = RenderUpdates()
-        self.pause = RenderUpdates()
+        self.stats_position = ((Window.GUI_WIDTH//2)*1.25, self.center_for_text)
+        self.pause_pos = (Window.GUI_WIDTH//2, Window.GUI_HEIGHT-10-self.font_size)
 
         self.towers_pos = []
         self.tower_pos_types = []
@@ -47,9 +40,7 @@ class Gui():
     def create_gui(self, lives:int, coins:int, wave:int, textures:dict):
         """ Creates the gui"""
         self.draw_background()
-        self.show_lives(lives)
-        self.show_coins(coins)
-        self.show_wave(wave)
+        self.show_stats(lives, coins, wave)
         self.show_towers(textures)
 
 
@@ -71,41 +62,23 @@ class Gui():
             self.towers_pos.append(position)
             self.tower_pos_types.append((position, tower_type))
 
-    # Tady u těch textů je problém, že když se zkrátí, tak to staré tam pořád je. Například u coinů když se dostaneme z 1000 na 750, tak to ukazuje 7500 protoze tam na konci je ta sratá 0
-    def show_lives(self, lives_c:int):
-        """ Shows the lives on the screen"""
+    def show_stats(self, lives:int, coins:int, wave:int):
+        stats_text = self.font.render(f'Wave: {wave}    Coins: {coins}    Lives: {lives}', True, self.color, self.background_color)
+        stats_rect = stats_text.get_rect(topleft=self.stats_position)
+        stats = GameObject(stats_rect.x, stats_rect.y, stats_rect.width, stats_rect.height, stats_text)
 
-        # Create the new text
-        lives_text = self.font.render(f'Lives: {str(lives_c)}', True, self.color, self.background_color)
-        lives_rect = lives_text.get_rect(topleft=self.lives_pos)
+        self.graphics_manager.draw_object(stats, False, self.background)
+    
+    def show_tower_info(self, tower_type):
+        info_text = self.small_font.render(f'{tower_type.__name__}:    Cost: {tower_type.COST}    Range: {tower_type.RANGE}    Damage: {tower_type.DAMAGE}    Reload time: {tower_type.RELOAD_TIME}                                  ', True, self.color, self.background_color)
+        info_rect = info_text.get_rect(topleft=(10, Window.GUI_HEIGHT-self.font_size//2-5))
+        info = GameObject(info_rect.x, info_rect.y, info_rect.width, info_rect.height, info_text)
 
-        lives_G = GameObject(lives_rect.x, lives_rect.y, lives_rect.width, lives_rect.height, lives_text)
-        self.lives.add(lives_G)
-        self.graphics_manager.draw_group(self.lives, False, self.background)
-
-
-    def show_coins(self, coins:int):
-        """ Shows the coins on the screen"""
-        coins_text = self.font.render(f'Coins: {str(coins)}', True, self.color, self.background_color)
-        coins_rect = coins_text.get_rect(topleft=self.coins_pos)
-        self.old_coins_text = coins_rect
-        coins_G = GameObject(coins_rect.x, coins_rect.y, coins_rect.width, coins_rect.height, coins_text)
-        self.coins.add(coins_G)
-        self.graphics_manager.draw_group(self.coins, False, self.background)
-
-
-    def show_wave(self, wave:int):
-        """ Shows the wave on the screen"""
-        wave_text = self.font.render(f'Wave: {str(wave)}', True, self.color, self.background_color)
-        wave_rect = wave_text.get_rect(topleft=self.wave_pos)
-
-        wave_G = GameObject(wave_rect.x, wave_rect.y, wave_rect.width, wave_rect.height, wave_text)
-        self.coins.add(wave_G)
-        self.graphics_manager.draw_group(self.wave, False, self.background)
-
+        self.graphics_manager.draw_object(info, False, self.background)
 
     def show_towers(self, textures:dict):
             """ Shows the towers on the screen"""
+            self.tower_cards.empty()
             self.create_towers_grid()
             for index, tower_type in enumerate(tower_types):
                 image_name = tower_type.IMAGE
@@ -115,16 +88,15 @@ class Gui():
                 self.tower_cards.add(tower_card)
             self.graphics_manager.draw_group(self.tower_cards, False, self.background)
 
-### PREDELAT, neni hotove
-    def pause_text(self, screen, pause:bool):
-        """ Shows the pause on the screen"""
-        if self.pause_rect:
-            draw.rect(screen, self.background_color, self.pause_rect)
-        if pause:
-            pause_text = self.font.render(f'PAUSE', True, self.color, self.background_color)
-            self.pause_rect = pause_text.get_rect(center=(Window.GAME_WIDTH//2, Window.GUI_HEIGHT//2))
-            screen.blit(pause_text, self.pause_rect)
-            display.update(self.pause_rect) #TODO
+    # def pause_text(self, pause:bool):
+    #     """ Shows the pause on the screen"""
+    #     if pause:
+    #         pause_text = self.font.render(f'Pause', True, Colors.BUTTONS, self.background_color)
+    #         pause_rect = pause_text.get_rect(topleft=self.pause_pos)
+
+    #         pause_G = GameObject(pause_rect.x, pause_rect.y, pause_rect.width, pause_rect.height, pause_text)
+    #         self.pause_object = pause_G
+    #         self.graphics_manager.draw_object(pause_G, False, self.background)
 
     def change_size(self, size:int):
         """ Changes the size of the gui. Size is a multiplier of the original size"""

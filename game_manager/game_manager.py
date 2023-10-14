@@ -108,16 +108,13 @@ class GameManager:
 #------------------------------------------------------------------------------------------------------------
 
     def update_gui(self) -> None:
-        self.gui.show_lives(self.lives)
-        self.gui.show_coins(self.coins)
-        self.gui.show_wave(self.wave)
-        self.changed_rects += self.gui.changed_rects
+        self.gui.show_stats(self.lives, self.coins, self.wave)
+        self.gui.show_towers(self.graphics_manager.textures)
 
     def update_changed_rects(self) -> None:
         self.graphics_manager.rects_to_update = self.changed_rects
         self.graphics_manager.update()
         self.changed_rects = []
-        self.gui.changed_rects = []
 
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
@@ -297,6 +294,7 @@ class GameManager:
             self.coins -= tower.COST
             return True
         else:
+            print("Not enough money")
             return False
         
 
@@ -309,19 +307,19 @@ class GameManager:
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
  
-    def handle_card_click(self):
+    def click_on_card(self):
         if self.clicked_card:
-            return False
+            self.graphics_manager.draw_rect(self.clicked_card[1], Colors.MENU_BG, False, self.gui.background)  
         clicked_cards = [card for card in self.gui.tower_cards if card.rect.collidepoint(pg.mouse.get_pos())]
         if not clicked_cards:
             return
         clicked_card = clicked_cards[0]
         rectangle = clicked_card.rect.copy()
+        self.clicked_card = clicked_card, rectangle
         rectangle.x -= Window.CARD_RECT_WIDTH
         rectangle.y -= Window.CARD_RECT_WIDTH
         rectangle.width += 2*Window.CARD_RECT_WIDTH
         rectangle.height += 2*Window.CARD_RECT_WIDTH
-        self.clicked_card = clicked_card, rectangle
 
         for rect, type in self.gui.tower_pos_types:
             if rect == self.clicked_card[0].rect.topleft:
@@ -330,20 +328,17 @@ class GameManager:
         return True
     
     def handle_click_on_map(self):
+        """ Handle click on map for tower placement"""
         clicked_tiles = [tile for tile in self.tiles if tile.rect.collidepoint(pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]-Window.GUI_HEIGHT)]
         if not clicked_tiles:
             return False # kdyz kliknu mimo mapu (GUI)
         clicked_tile = clicked_tiles[0]
         rectangle = clicked_tile.rect.copy()
-        if self.buy_tower(self.clicked_tower_type, (rectangle.x, rectangle.y)):
-            self.clicked_card = None
-            self.clicked_tower_type = None
-            self.gui.create_gui(self.lives, self.coins, self.wave, self.graphics_manager.textures)
-        else:
-            self.clicked_card = None
-            self.clicked_tower_type = None
-            self.gui.create_gui(self.lives, self.coins, self.wave, self.graphics_manager.textures)
-        return True
+        self.buy_tower(self.clicked_tower_type, (rectangle.x, rectangle.y)) # Can be succesful or not
+
+        self.clicked_card = None
+        self.clicked_tower_type = None
+        self.gui.create_gui(self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
 # #------------------------------------------------------------------------------------------------------------
 # #------------------------------------------------------------------------------------------------------------
@@ -360,13 +355,14 @@ class GameManager:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.pause = not self.pause
-                    self.gui.pause_text(self.graphics_manager.screen, self.pause)
-            elif (event.type == pg.MOUSEBUTTONDOWN and event.button == 1) and self.handle_card_click():
-                
-                self.graphics_manager.draw_rect(self.clicked_card[1], Colors.BUTTONS, False)
-            
+                    # self.gui.pause_text(self.pause)
+            elif (event.type == pg.MOUSEBUTTONDOWN and event.button == 1) and self.click_on_card():
+                self.graphics_manager.draw_rect(self.clicked_card[1], Colors.BUTTONS, False, self.gui.background)
+                self.gui.show_tower_info(self.clicked_tower_type)
+
             elif self.clicked_card and (event.type == pg.MOUSEBUTTONDOWN and event.button == 1):
                 self.handle_click_on_map()
+ 
 
 
 

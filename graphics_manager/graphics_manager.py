@@ -19,6 +19,7 @@ class GraphicsManager:
 
         self.canvas_game: pg.Surface = None
         self.canvas_gui: pg.Surface = None
+        self.texture_loader = TextureLoader()
         logging.debug("GraphicsManager class initializer ran succesfully.")
 
     def draw_object(self, object: GameObject, game:bool, background=None) -> None:
@@ -78,7 +79,7 @@ class GraphicsManager:
     def load_all_textures(self) -> None:
         """Initializates load_all_textures method."""
         logging.debug("Load_all_functions called.")
-        self.textures = TextureLoader.load_all_textures(self)
+        self.textures = self.texture_loader.load_all_textures()
 
     def init_graphics(self) -> None:
         """ Initializate graphics. """
