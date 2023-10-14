@@ -49,7 +49,7 @@ class Gui():
         #draw.rect(screen, self.background_color, (self.position[0], self.position[1], Window.WIDTH, Window.GUI_HEIGHT))
         self.background = Surface((Window.GUI_WIDTH, Window.GUI_HEIGHT))
         self.background.fill(self.background_color)
-        self.background.convert()
+        self.background = self.background.convert()
 
         background_object = GameObject(0, 0, Window.GUI_WIDTH, Window.GUI_HEIGHT, self.background)
         self.graphics_manager.draw_object(background_object, False)
