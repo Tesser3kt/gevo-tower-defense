@@ -1,9 +1,9 @@
 """Configuration for the level generator."""
-from config.settings.general_config import Tile
+from config.settings.general_config import Window
 
 class Config_lvl_gen:
-    MAX_TURNING_POINTS = Tile.WIDTH//8
-    MIN_TURNING_POINTS = Tile.WIDTH//16
+    MAX_TURNING_POINTS = Window.TILES_IN_WIDTH//8
+    MIN_TURNING_POINTS = Window.TILES_IN_WIDTH//16
 
 #Probs for difficulties
     PROBS = [
