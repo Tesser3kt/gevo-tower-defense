@@ -6,6 +6,8 @@ from pygame.transform import scale
 import pygame as pg
 # python imports
 import logging
+import math
+import random
 
 
 # --- PROJECT IMPORTS ---
@@ -23,12 +25,18 @@ from game_objects.tiles.tile_object import TileObject
 from game_objects.tiles.tile_type import TileType
 from game_objects.towers.tower_type import TowerType
 from game_objects.towers.tower_object import TowerObject
+from game_objects.enemies.enemy_object import EnemyObject
+from game_objects.mobile_object import MobileObject
 
 # other
 from graphics_manager.graphics_manager import GraphicsManager
 from game_manager import wave_maker, spawn_delay
 from level_converter.level_converter import convert_level
 from level_generator.level_generator import generate_level
+from level_generator.wall_generator import create_walls
+
+from ai.ai import AI
+
 
 # texture loader
 #from texture_loader.texture_loader import TextureLoader
@@ -41,6 +49,7 @@ class GameManager:
     def __init__(self) -> None:
         self.gui = None
         self.graphics_manager = None
+        self.ai = None
 
         self.changed_rects = []
         self.objects = RenderUpdates()
@@ -48,13 +57,14 @@ class GameManager:
         self.projectiles = RenderUpdates()
         self.towers = RenderUpdates()
         self.living_enemies = RenderUpdates()
+        self.enemies = RenderUpdates()
         self.not_spawned_enemies = []
         self.effects = RenderUpdates()
         self.tiles = RenderUpdates()
         self.occupied_tiles = RenderUpdates()
         self.default_tiles = RenderUpdates()
         self.wall_tiles = RenderUpdates()
-
+        self.projectiles = RenderUpdates()
 
         self.moving_objects = RenderUpdates()
         self.static_objects = RenderUpdates()
@@ -68,6 +78,7 @@ class GameManager:
         self.level:int = Game.START_LEVEL
         self.wave:int = Game.START_WAVE
         self.new_wave:int = Game.START_WAVE
+        self.frames = 0
 
         self.converted_level = []
         self.clicked_card = None #Sprite, Rect  --> Tuple
@@ -92,13 +103,19 @@ class GameManager:
         self.graphics_manager = GraphicsManager()
         self.gui = Gui(self.graphics_manager)
 
+
     def initialize(self):
         """ Initialize game"""
         generate_level(self.level)
+        create_walls(self.level)
         self.graphics_manager.init_graphics()
         self.graphics_manager.load_all_textures()
 
         self.converted_level = convert_level(self.level)
+
+        self.ai = AI(self.converted_level, self.enemies)
+        # self.ai.find_paths(self.converted_level["start"])
+
 
 
 #------------------------------------------------------------------------------------------------------------
@@ -124,22 +141,34 @@ class GameManager:
 
     def show_map(self) -> None:
         """ Show map on screen"""
+        special_wall = False
         for tile in self.converted_level:
-            if tile == "walls":
-                t_type = TileType.WALL
-            elif tile == "path" or tile == "start" or tile == "end":
-                t_type = TileType.OCCUPIED
-            elif tile == "free_tile":
-                t_type = TileType.DEFAULT
-            else:
-                print("Unknown tile type")
+            for rect in self.converted_level[tile]:    
+                if tile == "walls":
+                    t_type = TileType.WALL
+                elif tile == "path":
+                    t_type = TileType.OCCUPIED
+                elif tile == "start":
+                    t_type = TileType.OCCUPIED
+                elif tile == "end":
+                    t_type = TileType.OCCUPIED
+                elif tile == "free_tile":
+                    t_type = TileType.DEFAULT
+                elif tile == "special_wall":
+                    tile = "walls"
+                    t_type = TileType.WALL
+                    special_wall = True
+                else:
+                    print("Unknown tile type")
 
-            for pixel in range(len(self.converted_level[tile])):
-                image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
+                if special_wall:
+                    image = self.graphics_manager.textures["game_objects"]["tiles"]["horizontal_wall"][0]
+                else:
+                    image = self.graphics_manager.textures["game_objects"]["tiles"][tile][0]
                 image = scale(image, (Window.PIXEL_SIZE, Window.PIXEL_SIZE))     
-                rect = self.converted_level[tile][pixel]
 
                 tile_object = TileObject(rect.x, rect.y, Window.PIXEL_SIZE, Window.PIXEL_SIZE, image, t_type)
+
                 if t_type == TileType.OCCUPIED:
                     self.occupied_tiles.add(tile_object)
                 elif t_type == TileType.DEFAULT:
@@ -152,78 +181,110 @@ class GameManager:
                 
                 
 
-# # #------------------------------------------------------------------------------------------------------------
-# # #------------------------------------------------------------------------------------------------------------
-# # #-------------------------------------- HANDLE ENEMIES ------------------------------------------------------
-# # #------------------------------------------------------------------------------------------------------------
-# # #------------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
+# #-------------------------------------- HANDLE ENEMIES ------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------------
 
+    def get_start(self) -> tuple:
+        """ Get start position from level"""
+        logging.debug(f"Getting start position from level {self.level}")
+        return self.converted_level["start"][0].x, self.converted_level["start"][0].y
 
-#     def get_start(self) -> tuple:
-#         """ Get start position from level"""
-#         logging.debug(f"Getting start position from level {self.level}")
-#         return self.converted_level["start"][0].x, self.converted_level["start"][0].y
+    def enemies_creator(self, level:Difficulty, wave: int):
+        """ Load wave from config. The wave is randomized"""
+        logging.debug(f"Loading wave {wave}")
 
+        wave_function = Wave_difficulty.waves_dict[level]
+        number_of_enemies = int(wave_function(wave))  
+        if number_of_enemies < 2:
+            number_of_enemies = 2
+        enemies = wave_maker.create_wave(number_of_enemies, wave)
+        #name of enemies in a list
+    
+        enemy_objects = []
+        x,y = self.get_start()
+        
 
-#     def wave_loader(self, level:Difficulty ,wave: int) -> list[EnemyObject]:
-#         """ Load wave from config and return a list of EnemyObjects. The wave is randomized"""
-#         logging.debug(f"Loading wave {wave}")
-
-#         wave_function = Wave_difficulty.waves_dict[level]
-#         number_of_enemies = int(wave_function(wave))    
-#         enemies = wave_maker.create_wave(number_of_enemies, wave)
-#         #name of enemies in a list
-
-#         enemy_objects = []
-#         x,y = self.get_start(self.level)
-
-#         for enemy_name in enemies:
-#             try:
-#                 hp = enemy_dict[enemy_name].HEALTH
-#                 size = enemy_dict[enemy_name].SIZE
-#                 image = ... #TODO: image
-#                 speed = enemy_dict[enemy_name].SPEED
-#                 direction = ... #TODO: direction
-#                 animation = ... #TODO: animation
-#                 animation_index = ... #TODO: animation_index
-#                 detectable = enemy_dict[enemy_name].DETECTABLE
-#                 lvl = enemy_dict[enemy_name].START_LEVEL
-#             except KeyError:
-#                 logging.debug(f"Enemy {enemy_name} is not in enemy_dict" + KeyError)
+        for enemy_name in enemies:
+            try:
+                hp = enemy_dict[enemy_name].HEALTH
+                size = enemy_dict[enemy_name].SIZE
+                image = self.graphics_manager.textures["game_objects"]["enemies"][enemy_dict[enemy_name].IMAGE][0]
+                image = scale(image, (size, size))
+                speed = enemy_dict[enemy_name].SPEED
+                direction = (0, 0)
+                animation_index = 0
+                animation = self.graphics_manager.textures["game_objects"]["enemies"][enemy_dict[enemy_name].IMAGE]
+                detectable = enemy_dict[enemy_name].DETECTABLE
+                lvl = enemy_dict[enemy_name].START_LEVEL
+            except KeyError:
+                logging.debug(f"Enemy {enemy_name} is not in enemy_dict", KeyError)
             
-#             enemy = EnemyObject(hp, x, y, size, size, image, speed, direction, animation, animation_index, detectable, lvl)
-#             enemy_objects.append(enemy)
+            enemy = EnemyObject(hp, x, y, size, size, image, speed, direction, animation, animation_index, detectable, lvl)
+            enemy_objects.append(enemy)
 
-#             # Adding the enemy into groups
-#             self.not_spawned_enemies.append(enemy)
+            # Adding the enemy into groups
+            self.not_spawned_enemies.append(enemy)
+            self.enemies.add(enemy)
 
-#         logging.info(f"Loaded wave {wave} with {number_of_enemies} enemies")
-
-#         # EnemyObjects in a list
-#         return enemy_objects
+        logging.info(f"Loaded wave {wave} with {number_of_enemies} enemies")
         
     
-#     def spawn_enemy(self, frames:int, spawn_delay:int) -> None:
-#         """ Transfer enemy from not_spawned to living and moving groups in intervals. Called every frame"""
-#         if len(self.not_spawned_enemies) == 0:
-#             return 
+    def spawn_enemy(self, spawn_delay:int) -> None:
+        """ Transfer enemy from not_spawned to living and moving groups in intervals. Called every frame"""
+        if len(self.not_spawned_enemies) == 0:
+            return 
         
-#         if frames % spawn_delay == 0:
-#             enemy = self.not_spawned_enemies.pop(0)
+        if self.frames % spawn_delay == 0:
+            enemy = self.not_spawned_enemies.pop(0)
 
-#             self.living_enemies.add(enemy)
-#             self.moving_objects.add(enemy)
+            self.living_enemies.add(enemy)
+            self.moving_objects.add(enemy)
 
-#             logging.debug(f"Spawned enemy {enemy} with spawn delay {spawn_delay}")
-#             # Enemy is in living group and moving objects group --> One group will be drawn every frame
+            logging.debug(f"Spawned enemy {enemy} with spawn delay {spawn_delay}")
+            # Enemy is in living group and moving objects group --> One group will be drawn every frame
            
+    def enemy_update(self) -> None:
+        for enemy in self.living_enemies:
+            if enemy.hp <= 0:
+                enemy.kill()
 
-#     def handle_enemy_hp(self) -> None:
-#         """ Check if enemy is dead and kill it"""
+            # else:
+                # enemy_direction = self.ai.get_next_step(enemy)
+            end = self.converted_level["end"]
+            end_x, end_y = end[0].x, end[0].y
+            start = self.converted_level["start"]
+            start_x, start_y = start[0].x, start[0].x
+            vector = (end_x-start_x, end_y-start_y)
+            v_vector = (vector[0]**2 + vector[1]**2)**0.5
+            vector = vector[0] / v_vector, vector[1] / v_vector
 
-#         for enemy in self.living_enemies:
-#             if enemy.hp <= 0:
-#                 enemy.kill()
+
+
+            enemy.direction = vector
+            enemy.speed = Game.ENEMY_SPEED
+            enemy.move()
+            # print(vector)
+
+        self.graphics_manager.draw_group(self.living_enemies, True)
+
+
+    def next_wave(self) -> None:
+        self.wave_running = True
+        self.wave += 1
+        self.enemies_creator(self.level, self.wave)
+        self.spawn_enemy(spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
+
+    def kill_all_enemies(self) -> None:
+        """ Kill all enemies in the game"""
+        for enemy in self.living_enemies:
+            enemy.kill()
+        for enemy in self.not_spawned_enemies:
+            enemy.kill()
+        self.wave_running = False
+
         
 #------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------
@@ -297,7 +358,59 @@ class GameManager:
             print("Not enough money")
             return False
         
+    def create_projectile(self, tower):
+        projectile = MobileObject(tower.rect.x, tower.rect.y, Window.PIXEL_SIZE, Window.PIXEL_SIZE, tower.projectile_animation[0], Game.PROJECTILE_SPEED, (0, 0))
+        self.projectiles.add(projectile)
+        return projectile
+            
+    def shoot(self):   
+        """ Shoot from tower"""
+        if self.frames % Game.TOWER_RELOAD_TIMES == 0:
+            if len(self.projectiles) < len(self.living_enemies):
+                for tower in self.towers:
+                # Find closest enemy
+  
+                    projectile = self.create_projectile(tower)
+                    self.projectiles.add(projectile)
 
+
+
+    def update_projectiles(self):
+        target = None
+        shortest_distance = 9999999999
+
+        for projectile in self.projectiles:
+            for enemy in self.enemies:
+                distance = ((projectile.rect.x - enemy.rect.x) ** 2 + (projectile.rect.y - enemy.rect.y) ** 2)
+                if distance < shortest_distance:
+                    shortest_distance = distance
+                    target = enemy
+
+            if not target:
+                self.projectiles.empty()
+            else:
+                vector = (target.rect.x-projectile.rect.x, target.rect.y-projectile.rect.y)
+                v_vector = (vector[0]**2 + vector[1]**2)**0.5
+                if v_vector != 0:
+                    vector = (vector[0] / v_vector, vector[1] / v_vector)
+
+                projectile.direction = vector
+                projectile.speed = Game.PROJECTILE_SPEED
+                projectile.move()
+
+
+    def projectile_hit(self):
+        if pg.sprite.groupcollide(self.projectiles, self.living_enemies, True, True):
+            print("Hit")
+            self.coins += Economy.MONEY_PER_KILL
+        if pg.sprite.groupcollide(self.projectiles, self.wall_tiles, True, False):
+            print("Hit wall")
+
+
+        
+
+
+    
         
 
 
@@ -356,6 +469,10 @@ class GameManager:
                 if event.key == pg.K_ESCAPE:
                     self.pause = not self.pause
                     # self.gui.pause_text(self.pause)
+                if event.key == pg.K_SPACE:
+                    self.kill_all_enemies()
+                    self.next_wave()
+
             elif (event.type == pg.MOUSEBUTTONDOWN and event.button == 1) and self.click_on_card():
                 self.graphics_manager.draw_rect(self.clicked_card[1], Colors.BUTTONS, False, self.gui.background)
                 self.gui.show_tower_info(self.clicked_tower_type)
@@ -370,14 +487,25 @@ class GameManager:
         """ Update game state every frame"""
         self.update_gui()
         self.update_changed_rects()
+        if len(self.living_enemies) == 0 and len(self.not_spawned_enemies) == 0:
+            self.wave_running = False
+            self.next_wave()
 
-        #if not self.wave_running:
-            # Load wave
-            #wave = self.wave_loader(self.wave)
-            #self.add_enemies_to_group(wave)        
-        # Spawn enemies in intervals
-        #self.spawn_enemy(frames, spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
-        #self.handle_enemy_hp()
+        # Tohle az bude spawn delay existovat
+        # self.spawn_enemy(spawn_delay.spawn_delay(self.not_spawned_enemies[0], self.not_spawned_enemies[1]))
+        self.spawn_enemy(10)
+        self.enemy_update()
+        self.shoot()
+        self.update_projectiles()
+        self.projectile_hit()
+
+        pg.sprite.groupcollide(self.living_enemies, self.wall_tiles, True, False)
+
+
+        self.graphics_manager.draw_group(self.tiles, True)
+        self.graphics_manager.draw_group(self.towers, True)
+        self.graphics_manager.draw_group(self.living_enemies, True)
+        self.graphics_manager.draw_group(self.projectiles, True)
 
     def run(self) -> None:
         """ Main game loop"""
@@ -388,7 +516,10 @@ class GameManager:
 
         self.gui.create_gui(self.lives, self.coins, self.wave, self.graphics_manager.textures)
 
-        frames = 0
+        # prvni start wavky
+        self.next_wave()
+
+        self.frames = 0
         while self.running:
             self.clock.tick(Game.FPS)
             self.handle_input()
@@ -396,8 +527,8 @@ class GameManager:
             if self.pause:
                 continue
 
-            frames += 1 #bezi kdzy neni pauza
-            self.lives = frames
+            self.frames += 1 #bezi kdzy neni pauza
+            self.lives = self.frames
             self.update()
     
     
