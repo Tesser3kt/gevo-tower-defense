@@ -38,17 +38,19 @@ class Economy:
     
 class Game:
     FPS = 60
-    START_LEVEL = 0
+    START_LEVEL = 5
     START_WAVE = 0
+    PROJECTILE_SPEED = 4
+    ENEMY_SPEED = 2
+    TOWER_RELOAD_TIMES = 20
 
 class Colors:
     BACKGROUND = (55, 55, 50)
     PATH = (255, 255, 0)
     START = (0, 255, 0)
     END = (255, 0, 0)
-    WALLS_HORIZONTAL = (255, 255, 255)
     WALLS_VERTICAL = (200, 200, 200)
-    WALLS = (255, 255, 255)
+    WALLS_HORIZONTAL = (255, 255, 255)
     MENU_BG = (0, 0, 255)
     MENU_TEXT = (255, 0, 255)
     BUTTONS = (255, 255, 0)

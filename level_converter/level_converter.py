@@ -4,10 +4,6 @@ import pygame as pg
 import os
 import logging
 
-#from config.settings.general_config import Window
-#screen = pg.display.set_mode((Window.WIDTH, Window.HEIGHT), pg.SCALED)
-#screen.fill((255, 0, 0))
-
 #Load image
 def load_image(level_difficulty: int):
     """Load level image"""
@@ -44,13 +40,15 @@ def convert_level(level_difficulty: int)-> dict:
     start_rect = []
     end_rect = []
     free_tile_rect = []
+    special_wall_rect = []
 
     tiles = {
         "path": path_rect,
         "walls": walls_rect,
         "start": start_rect,
         "end": end_rect,
-        "free_tile": free_tile_rect
+        "free_tile": free_tile_rect,
+        "special_wall" : special_wall_rect
     }
 
     #Process data from image
@@ -60,7 +58,7 @@ def convert_level(level_difficulty: int)-> dict:
 
         
         #Detect colors
-        if pixel == Colors.WALLS:
+        if pixel == Colors.WALLS_HORIZONTAL:
             square = create_rect((x, y))
             walls_rect.append(square)
         elif pixel == Colors.PATH:
@@ -75,6 +73,9 @@ def convert_level(level_difficulty: int)-> dict:
         elif pixel == Colors.BACKGROUND:
             square = create_rect((x, y))
             free_tile_rect.append(square)
+        elif pixel == Colors.WALLS_VERTICAL:
+            square = create_rect((x, y))
+            special_wall_rect.append(square)
         else:
             logging.error(f"Level converter: Unknown color: {pixel}")
             print("Unknown color")

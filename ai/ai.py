@@ -57,14 +57,14 @@ class AI:
             for soused in sousedi:
                 pathid = len(list(self.available_paths))+1
                 #print(pathid)
-                self.available_paths[pathid] = [self.available_paths[cesta].copy()]
+                self.available_paths[pathid] = self.available_paths[cesta].copy()
                 q.put((soused,pathid))
 
     def get_next_step(self,enemy):
         """Returns next step in the apropriet path for the enemy"""
         pathid = self.enemypaths[enemy][0]
         self.enemypaths[enemy][1] +=1
-        positionindex =self.enemypaths[enemy][1]
+        positionindex = self.enemypaths[enemy][1]
         return self.available_paths[pathid][positionindex]
 
     #not working do not use!!
